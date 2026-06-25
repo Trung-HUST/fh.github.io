@@ -6,10 +6,10 @@
 [2Ktransforming...✓ 1865 modules transformed.
 rendering chunks...
 computing gzip size...
-dist/index.html                   0.87 kB │ gzip:   0.46 kB
+dist/index.html                   0.87 kB │ gzip:   0.45 kB
 dist/assets/bg-CoJEZelR.jpg     926.25 kB
 dist/assets/index-DEuJEs1p.css  102.21 kB │ gzip:  15.64 kB
-dist/assets/index-LkHw44vU.js   765.54 kB │ gzip: 210.64 kB
+dist/assets/index-C-l6aKe6.js   765.93 kB │ gzip: 210.79 kB
 
 [33m[33m[INEFFECTIVE_DYNAMIC_IMPORT] [0msrc/lib/sheet-db.ts is dynamically imported by src/pages/RecordListPage.tsx, src/pages/SettingsPage.tsx, src/viewmodels/useRecordListViewModel.ts but also statically imported by src/lib/googleSheetDb.ts, src/pages/DashboardPage.tsx, src/pages/FundDetailPage.tsx, src/pages/PortfolioPage.tsx, src/pages/SettingsPage.tsx, ..., dynamic import will not move module into another chunk.
 [39m
@@ -20,4 +20,4 @@ dist/assets/index-LkHw44vU.js   765.54 kB │ gzip: 210.64 kB
 - Adjust chunk size limit for this warning via build.chunkSizeWarningLimit.[39m
 [33m[33m[INEFFECTIVE_DYNAMIC_IMPORT] [0msrc/data/mock.ts is dynamically imported by src/lib/sheet-db.ts, src/pages/SettingsPage.tsx but also statically imported by src/viewmodels/useAccountsViewModel.ts, src/viewmodels/useComponentShowcaseViewModel.ts, src/viewmodels/useDashboardViewModel.ts, src/viewmodels/useFlowComparisonViewModel.ts, src/viewmodels/useHelpViewModel.ts, ..., dynamic import will not move module into another chunk.
 [39m
-[32m✓ built in 499ms[39m
+[32m✓ built in 629ms[39m
