@@ -772,7 +772,7 @@ export async function registerRemoteUser(email: string, password: string, displa
     const loginResult = await response.json();
 
     if (loginResult.pendingApproval) {
-      throw new Error("Tài khoản đã được đăng ký thành công! Vui lòng chờ Quản trị viên kích hoạt (Active=TRUE) để sử dụng.");
+      throw new Error("registration_pending_approval");
     }
 
     if (!loginResult.ok || !loginResult.data) {

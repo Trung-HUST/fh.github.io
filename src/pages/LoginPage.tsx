@@ -105,7 +105,11 @@ export default function LoginPage() {
       navigate("/");
     } catch (error) {
       setIsError(true);
-      setMessage(error instanceof Error ? error.message : (isRegistering ? "Registration failed." : "Authentication failed."));
+      if (error instanceof Error && error.message === "registration_pending_approval") {
+        setMessage(t("pages.login.registrationPending", "Tài khoản đã được đăng ký thành công! Vui lòng chờ Quản trị viên phê duyệt."));
+      } else {
+        setMessage(error instanceof Error ? error.message : (isRegistering ? "Registration failed." : "Authentication failed."));
+      }
     } finally {
       setIsSubmitting(false);
     }

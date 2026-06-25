@@ -97,6 +97,7 @@
       "operatorId": "operator id",
       "passphrase": "passphrase",
       "authenticate": "AUTHENTICATE",
+      "registrationPending": "Account registered successfully! Please wait for sysadmin approval.",
       "forgotAccess": "> forgot access? contact sysadmin"
     },
     "static": {

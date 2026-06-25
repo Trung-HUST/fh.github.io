@@ -98,6 +98,7 @@
       "operatorId": "id người điều hành",
       "passphrase": "mật khẩu",
       "authenticate": "XÁC THỰC",
+      "registrationPending": "Tài khoản đã được đăng ký thành công! Vui lòng chờ Quản trị viên phê duyệt.",
       "forgotAccess": "> quên quyền truy cập? liên hệ quản trị hệ thống"
     },
     "static": {

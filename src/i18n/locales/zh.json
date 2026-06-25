@@ -95,6 +95,7 @@
       "operatorId": "操作员 ID",
       "passphrase": "密码",
       "authenticate": "认证",
+      "registrationPending": "账户注册成功！请等待系统管理员批准。",
       "forgotAccess": "> 忘记访问权限？联系系统管理员"
     },
     "static": {
