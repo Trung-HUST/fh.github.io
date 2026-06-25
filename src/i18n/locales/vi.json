@@ -244,9 +244,9 @@
       "SAVINGS": "Tiết kiệm"
     },
     "signals": {
-      "VNINDEX": "CHỈ SỐ VN-INDEX",
+      "VN-INDEX": "CHỈ SỐ VN-INDEX",
       "BTCUSDT": "BITCOIN (BTC)",
-      "SJC GOLD": "GIÁ VÀNG SJC",
+      "9999 GOLD": "GIÁ VÀNG NHẪN 9999",
       "DOW JONES": "CHỈ SỐ DOW JONES"
     }
   },

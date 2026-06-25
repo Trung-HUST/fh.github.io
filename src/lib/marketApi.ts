@@ -20,15 +20,15 @@ export async function fetchGoldPrice(): Promise<MarketData> {
     
     const trend: number[] = [];
     sortedData.forEach(day => {
-      const sjc = day.prices?.VNGSJC || day.prices?.SJL1L10;
+      const sjc = day.prices?.SJ9999 || day.prices?.BT9999NTT;
       if (sjc && sjc.sell) {
         trend.push(sjc.sell);
       }
     });
 
     const latestDay = history[0]; // Newest
-    const latestSjc = latestDay.prices?.VNGSJC || latestDay.prices?.SJL1L10;
-    if (!latestSjc) throw new Error("Missing latest SJC data");
+    const latestSjc = latestDay.prices?.SJ9999 || latestDay.prices?.BT9999NTT;
+    if (!latestSjc) throw new Error("Missing latest 9999 gold data");
 
     const value = latestSjc.sell;
     let change = latestSjc.day_change_sell || latestSjc.change_sell || 0;
@@ -36,7 +36,7 @@ export async function fetchGoldPrice(): Promise<MarketData> {
     // If change is 0, find the last time it changed
     if (change === 0 && history.length > 1) {
       for (let i = 1; i < history.length; i++) {
-        const historicalSjc = history[i].prices?.VNGSJC || history[i].prices?.SJL1L10;
+        const historicalSjc = history[i].prices?.SJ9999 || history[i].prices?.BT9999NTT;
         if (historicalSjc && historicalSjc.sell && historicalSjc.sell !== value) {
           change = value - historicalSjc.sell;
           break;

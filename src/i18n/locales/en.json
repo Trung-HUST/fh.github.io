@@ -243,9 +243,9 @@
       "SAVINGS": "Savings"
     },
     "signals": {
-      "VNINDEX": "VN-INDEX",
-      "BTCUSDT": "BITCOIN (BTC)",
-      "SJC GOLD": "SJC GOLD"
+      "VN-INDEX": "VN-INDEX",
+      "DOW JONES": "DOW JONES",
+      "9999 GOLD": "9999 GOLD"
     }
   },
   "shell": {

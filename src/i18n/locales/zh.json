@@ -241,9 +241,9 @@
       "SAVINGS": "储蓄"
     },
     "signals": {
-      "VNINDEX": "VN-INDEX (越南指数)",
-      "BTCUSDT": "比特币 (BTC)",
-      "SJC GOLD": "SJC 黄金"
+      "VN-INDEX": "VN-INDEX",
+      "DOW JONES": "DOW JONES",
+      "9999 GOLD": "9999 黄金"
     }
   },
   "shell": {

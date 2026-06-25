@@ -61,10 +61,10 @@ export interface SignalRow {
 
 function useSystemSignals(): SignalRow[] {
   const [signals, setSignals] = useState<SignalRow[]>([
-    { label: "VNINDEX", value: "Loading...", trend: [], status: "nominal" },
+    { label: "BTC/USDT", value: "Loading...", trend: [], status: "nominal" },
+    { label: "VN-INDEX", value: "Loading...", trend: [], status: "nominal" },
     { label: "DOW JONES", value: "Loading...", trend: [], status: "nominal" },
-    { label: "BTCUSDT", value: "Loading...", trend: [], status: "nominal" },
-    { label: "SJC GOLD", value: "Loading...", trend: [], status: "nominal" }
+    { label: "9999 GOLD", value: "Loading...", trend: [], status: "nominal" }
   ]);
 
   useEffect(() => {
@@ -128,7 +128,7 @@ function useSystemSignals(): SignalRow[] {
           }
           if (gold.status === "fulfilled") {
             next[3] = {
-              label: "SJC GOLD",
+              label: "9999 GOLD",
               value: formatValue(gold.value.value, 0),
               changeText: formatChange(gold.value.change, gold.value.percentChange),
               trend: gold.value.trend,

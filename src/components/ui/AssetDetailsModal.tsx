@@ -116,17 +116,17 @@ export function AssetDetailsModal({ assetClass, assetType, contracts, transactio
     try {
       const res = await fetch(`https://www.vang.today/api/prices`);
       const data = await res.json();
-      let sjcSell = 0;
-      if (data && data.success && data.prices && data.prices.VNGSJC) {
-        const sellPricePerLuong = data.prices.VNGSJC.sell;
+      let goldSell = 0;
+      if (data && data.success && data.prices && data.prices.SJ9999) {
+        const sellPricePerLuong = data.prices.SJ9999.sell;
         if (sellPricePerLuong > 0) {
-          sjcSell = sellPricePerLuong / 10;
+          goldSell = sellPricePerLuong / 10;
         }
       }
-      if (sjcSell > 0) {
-        setGoldRate(sjcSell.toString());
+      if (goldSell > 0) {
+        setGoldRate(goldSell.toString());
       } else {
-        setToastMessage({ tone: "error", text: "Không trích xuất được giá SJC. Hãy nhập tay." });
+        setToastMessage({ tone: "error", text: "Không trích xuất được giá vàng 9999. Hãy nhập tay." });
       }
     } catch (e) {
       setToastMessage({ tone: "error", text: "Lỗi khi lấy giá vàng. Vui lòng thử lại hoặc nhập tay." });
