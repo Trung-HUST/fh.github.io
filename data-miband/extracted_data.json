@@ -1,0 +1,22 @@
+[
+  { "date": "2026-06-01", "sleepDuration": 5.0, "sleepScore": 75, "steps": 2500, "calories": 500 },
+  { "date": "2026-06-02", "sleepDuration": 7.5, "sleepScore": 85, "steps": 3500, "calories": 650 },
+  { "date": "2026-06-03", "sleepDuration": 6.0, "sleepScore": 78, "steps": 3000, "calories": 550 },
+  { "date": "2026-06-04", "sleepDuration": 6.5, "sleepScore": 80, "steps": 4000, "calories": 700 },
+  { "date": "2026-06-05", "sleepDuration": 4.5, "sleepScore": 65, "steps": 2500, "calories": 500 },
+  { "date": "2026-06-06", "sleepDuration": 5.0, "sleepScore": 70, "steps": 3000, "calories": 600 },
+  { "date": "2026-06-07", "sleepDuration": 3.0, "sleepScore": 55, "steps": 2312, "calories": 482 },
+  
+  { "date": "2026-06-08", "sleepDuration": 6.5, "sleepScore": 80, "steps": 3500, "calories": 600 },
+  { "date": "2026-06-09", "sleepDuration": 5.0, "sleepScore": 72, "steps": 2500, "calories": 450 },
+  { "date": "2026-06-10", "sleepDuration": 5.0, "sleepScore": 72, "steps": 2500, "calories": 450 },
+  { "date": "2026-06-11", "sleepDuration": 6.0, "sleepScore": 78, "steps": 3000, "calories": 550 },
+  { "date": "2026-06-12", "sleepDuration": 6.5, "sleepScore": 82, "steps": 3500, "calories": 600 },
+  { "date": "2026-06-13", "sleepDuration": 1.0, "sleepScore": 40, "steps": 1000, "calories": 200 },
+  { "date": "2026-06-14", "sleepDuration": 8.0, "sleepScore": 90, "steps": 2426, "calories": 517 },
+  
+  { "date": "2026-06-15", "sleepDuration": 6.0, "sleepScore": 75, "steps": 3000, "calories": 500 },
+  { "date": "2026-06-16", "sleepDuration": 5.5, "sleepScore": 70, "steps": 3200, "calories": 550 },
+  { "date": "2026-06-17", "sleepDuration": 4.93, "sleepScore": 62, "steps": 4500, "calories": 650 },
+  { "date": "2026-06-18", "sleepDuration": 6.5, "sleepScore": 80, "steps": 3500, "calories": 550 }
+]

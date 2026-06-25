@@ -1,0 +1,267 @@
+
+--- Update addTransaction to dynamically assign debit/credit based on contractType ---
+        let debitAccount = "Tài sản / Đầu tư";
+        let creditAccount = formData.wallet;
+        
+        if (formData.contractType === "SAVINGS") {
+          debitAccount = "Gửi tiết kiệm";
+        } else if (formData.contractType === "GOLD") {
+          debitAccount = "Vàng";
+        } else if (formData.contractType === "REAL_ESTATE") {
+          debitAccount = "Bất động sản";
+        } else if (formData.contractType === "VEHICLE") {
+          debitAccount = "Xe cộ";
+        } else if (formData.contractType === "INSTALLMENT") {
+          debitAccount = "Tài sản / Đầu tư"; // Nhận tài sản
+          creditAccount = "Khoản phải trả";  // Ghi nhận nợ, không trừ tiền mặt ngay
+        }
+
+        await addTransaction(
+          `Mua/Gửi: ${formData.name}`,
+          Number(formData.amount) || 0,
+          formData.date,
+          debitAccount, // category (destination wallet/fund)
+          creditAccount // from wallet (source)
+        );
+--- Add Vàng, Bất động sản, Xe cộ, and Khoản phải trả to the appropriate category lists so they are available in dropdowns and edits ---
+  const expenseCategories = ["Ăn uống", "Mua sắm", "Đi lại", "Giải trí", "Hóa đơn & Tiện ích", "Lỗ đầu tư"];
+  const incomeCategories = ["Lương", "Thu nhập khác", "Đầu tư", "Gửi tiết kiệm", "Vốn ban đầu", "Lãi đầu tư", "Vàng", "Bất động sản", "Xe cộ", "Khoản phải trả"];
+--- Update addTransaction to dynamically assign debit/credit based on contractType ---
+        let debitAccount = "Tài sản / Đầu tư";
+        let creditAccount = formData.wallet;
+        
+        if (formData.contractType === "SAVINGS") {
+          debitAccount = "Gửi tiết kiệm";
+        } else if (formData.contractType === "GOLD") {
+          debitAccount = "Vàng";
+        } else if (formData.contractType === "REAL_ESTATE") {
+          debitAccount = "Bất động sản";
+        } else if (formData.contractType === "VEHICLE") {
+          debitAccount = "Xe cộ";
+        } else if (formData.contractType === "INSTALLMENT") {
+          debitAccount = "Tài sản / Đầu tư"; // Nhận tài sản
+          creditAccount = "Khoản phải trả";  // Ghi nhận nợ, không trừ tiền mặt ngay
+        }
+
+        await addTransaction(
+          `Mua/Gửi: ${formData.name}`,
+          Number(formData.amount) || 0,
+          formData.date,
+          debitAccount, // category (destination wallet/fund)
+          creditAccount // from wallet (source)
+        );
+--- Change toAccount to Gửi tiết kiệm or Tài sản / Đầu tư depending on isSavings ---
+        await addTransaction(
+          `Mua/Gửi: ${formData.name}`,
+          Number(formData.amount) || 0,
+          formData.date,
+          isSavings ? "Gửi tiết kiệm" : "Tài sản / Đầu tư", // category (destination wallet/fund)
+          formData.wallet      // from wallet (source)
+        );
+--- Change debitAccount to formData.toAccount ---
+        await addTransaction(
+          `Mua/Gửi: ${formData.name}`,
+          Number(formData.amount) || 0,
+          formData.date,
+          formData.toAccount, // category (destination wallet/fund)
+          formData.wallet      // from wallet (source)
+        );
+--- Update handleSubmit in RecordListPage ---
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!formData.name || !formData.amount) return;
+    
+    if (formData.txType === "contract") {
+      const { batchUpsertContracts } = await import("@/lib/sheet-db");
+      const isInstallment = formData.contractType === "INSTALLMENT";
+      const isSavings = formData.contractType === "SAVINGS";
+      
+      const success = await batchUpsertContracts([{
+        name: formData.name,
+        type: formData.contractType as any,
+        amount: Number(formData.amount) || 0,
+        interestRate: Number(formData.interestRate) || 0,
+        durationMonths: Number(formData.durationMonths) || 0,
+        quantity: Number(formData.quantity) || 0,
+        depreciationRate: Number(formData.depreciationRate) || 0,
+        startDate: formData.date,
+        nextDueDate: (isSavings || isInstallment)
+          ? new Date(new Date(formData.date).setMonth(new Date(formData.date).getMonth() + 1)).toISOString().slice(0, 10) 
+          : "",
+        wallet: formData.wallet,
+        targetWallet: formData.toAccount,
+        status: "ACTIVE"
+      }]);
+      
+      if (success) {
+        // Create an expense transaction to deduct cash
+        await addTransaction(
+          `Mua/Gửi: ${formData.name}`,
+          Number(formData.amount) || 0,
+          formData.date,
+          "Tài sản / Đầu tư", // category
+          formData.wallet      // from wallet
+        );
+
+        await alert(t("records.success", "Bản ghi đã được tạo thành công!"));
+        setShowModal(false);
+        setFormData({ ...formData, name: "", amount: "" });
+        window.location.reload();
+      } else {
+        await alert(t("records.error", "Có lỗi xảy ra khi tạo bản ghi."));
+      }
+      return;
+    }
+--- Remove duplicated contract jsx ---
+[
+  {
+    "AllowMultiple": false,
+    "EndLine": 302,
+    "ReplacementContent": "",
+    "StartLine": 247,
+    "TargetContent": "                                ) : formData.txType === \"contract\" ? (\n                  <>\n                    <div className=\"col-span-2\">\n                      <label className=\"block text-matrix-dim mb-1 text-xs uppercase\">Lo\u1ea1i h\u1ee3p \u0111\u1ed3ng / T\u00e0i s\u1ea3n</label>\n                      <select value={formData.contractType} onChange={e => setFormData({...formData, contractType: e.target.value})} className=\"w-full bg-black border border-matrix-ghost/50 text-matrix-primary p-2 focus:border-matrix-primary focus:outline-none\">\n                        <option value=\"SAVINGS\">S\u1ed5 ti\u1ebft ki\u1ec7m</option>\n                        <option value=\"INSTALLMENT\">Tr\u1ea3 g\u00f3p</option>\n                        <option value=\"REAL_ESTATE\">B\u1ea5t \u0111\u1ed9ng s\u1ea3n</option>\n                        <option value=\"GOLD\">V\u00e0ng</option>\n                        <option value=\"VEHICLE\">Xe c\u1ed9</option>\n                      </select>\n                    </div>\n                    <div>\n                      <label className=\"block text-matrix-dim mb-1 text-xs uppercase\">V\u00ed ti\u1ec1n</label>\n                      <select value={formData.wallet} onChange={e => setFormData({...formData, wallet: e.target.value})} className=\"w-full bg-black border border-matrix-ghost/50 text-matrix-primary p-2 focus:border-matrix-primary focus:outline-none\">\n                        {walletOptions.map(opt => <option key={opt} value={opt}>{opt}</option>)}\n                      </select>\n                    </div>\n                    \n                    {(formData.contractType === \"SAVINGS\" || formData.contractType === \"INSTALLMENT\") && (\n                      <>\n                        <div>\n                          <label className=\"block text-matrix-dim mb-1 text-xs uppercase\">L\u00e3i su\u1ea5t (%/n\u0103m)</label>\n                          <input type=\"number\" step=\"0.01\" value={formData.interestRate} onChange={e => setFormData({...formData, interestRate: e.target.value})} className=\"w-full bg-black border border-matrix-ghost/50 text-matrix-primary p-2 focus:border-matrix-primary focus:outline-none\" />\n                        </div>\n                        <div>\n                          <label className=\"block text-matrix-dim mb-1 text-xs uppercase\">K\u1ef3 h\u1ea1n (th\u00e1ng)</label>\n                          <input type=\"number\" value={formData.durationMonths} onChange={e => setFormData({...formData, durationMonths: e.target.value})} className=\"w-full bg-black border border-matrix-ghost/50 text-matrix-primary p-2 focus:border-matrix-primary focus:outline-none\" />\n                        </div>\n                      </>\n                    )}\n\n                    {formData.contractType === \"SAVINGS\" && (\n                      <div>\n                        <label className=\"block text-matrix-dim mb-1 text-xs uppercase\">T\u00e0i kho\u1ea3n nh\u1eadn l\u00e3i/g\u1ed1c</label>\n                        <select value={formData.toAccount} onChange={e => setFormData({...formData, toAccount: e.target.value})} className=\"w-full bg-black border border-matrix-ghost/50 text-matrix-primary p-2 focus:border-matrix-primary focus:outline-none\">\n                          {walletOptions.map(opt => <option key={opt} value={opt}>{opt}</option>)}\n                        </select>\n                      </div>\n                    )}\n\n                    {formData.contractType === \"GOLD\" && (\n                      <div>\n                        <label className=\"block text-matrix-dim mb-1 text-xs uppercase\">S\u1ed1 l\u01b0\u1ee3ng</label>\n                        <input type=\"number\" step=\"0.01\" value={formData.quantity} onChange={e => setFormData({...formData, quantity: e.target.value})} className=\"w-full bg-black border border-matrix-ghost/50 text-matrix-primary p-2 focus:border-matrix-primary focus:outline-none\" />\n                      </div>\n                    )}\n\n                    {formData.contractType === \"VEHICLE\" && (\n                      <div>\n                        <label className=\"block text-matrix-dim mb-1 text-xs uppercase\">Kh\u1ea5u hao (%/n\u0103m)</label>\n                        <input type=\"number\" step=\"0.01\" value={formData.depreciationRate} onChange={e => setFormData({...formData, depreciationRate: e.target.value})} className=\"w-full bg-black border border-matrix-ghost/50 text-matrix-primary p-2 focus:border-matrix-primary focus:outline-none\" />\n                      </div>\n                    )}\n                  </>"
+  }
+]
+--- Use walletOptions for transfer form and remove fund_transfer ---
+                    <div>
+                      <label className="block text-matrix-dim mb-1 text-xs uppercase">{t("records.fromLabel", "Từ (From)")}</label>
+                      <select value={formData.fromAccount} onChange={e => setFormData({...formData, fromAccount: e.target.value})} className="w-full bg-black border border-matrix-ghost/50 text-matrix-primary p-2 focus:border-matrix-primary focus:outline-none">
+                        {walletOptions.map(opt => <option key={opt} value={opt}>{opt}</option>)}
+                      </select>
+                    </div>
+                    <div>
+                      <label className="block text-matrix-dim mb-1 text-xs uppercase">{t("records.toLabel", "Đến (To)")}</label>
+                      <select value={formData.toAccount} onChange={e => setFormData({...formData, toAccount: e.target.value})} className="w-full bg-black border border-matrix-ghost/50 text-matrix-primary p-2 focus:border-matrix-primary focus:outline-none">
+                        {walletOptions.map(opt => <option key={opt} value={opt}>{opt}</option>)}
+                      </select>
+                    </div>
+                  </>
+                ) : (
+                  <>
+                    <div>
+                      <label className="block text-matrix-dim mb-1 text-xs uppercase">{t("records.walletLabel", "Ví tiền (Wallet)")}</label>
+                      <select value={formData.wallet} onChange={e => setFormData({...formData, wallet: e.target.value})} className="w-full bg-black border border-matrix-ghost/50 text-matrix-primary p-2 focus:border-matrix-primary focus:outline-none">
+                        {walletOptions.map(opt => <option key={opt} value={opt}>{opt}</option>)}
+                      </select>
+                    </div>
+                    {(formData.txType === "expense" || formData.txType === "income") && (
+                      <div>
+                        <label className="block text-matrix-dim mb-1 text-xs uppercase">{t("records.categoryLabel", "Hạng mục (Category)")}</label>
+                        <select value={formData.category} onChange={e => setFormData({...formData, category: e.target.value})} className="w-full bg-black border border-matrix-ghost/50 text-matrix-primary p-2 focus:border-matrix-primary focus:outline-none">
+                          {(formData.txType === "expense" ? expenseCategories : incomeCategories).map(opt => <option key={opt} value={opt}>{opt}</option>)}
+                        </select>
+                      </div>
+                    )}
+                  </>
+                )}
+--- Change form UI to be simpler and use new categories ---
+  const txTypes = [
+    { id: "expense", label: t("records.txTypes.expense", "Chi tiêu (Expense)") },
+    { id: "income", label: t("records.txTypes.income", "Thu nhập (Income)") },
+    { id: "transfer", label: t("records.txTypes.transfer", "Chuyển tiền (Transfer)") },
+  ];
+
+  const walletOptions = ["Tiền mặt", "Tài khoản ngân hàng", "Thẻ tín dụng", "Hàng hóa"];
+  const expenseCategories = ["Ăn uống", "Mua sắm", "Đi lại", "Giải trí", "Hóa đơn & Tiện ích", "Lỗ đầu tư"];
+  const incomeCategories = ["Lương", "Thu nhập khác", "Đầu tư", "Gửi tiết kiệm", "Vốn ban đầu", "Lãi đầu tư"];
+
+  const handleEdit = (record: any) => {
+    setEditingRecord(record);
+    setFormData({
+      ...formData,
+      name: record.name,
+      amount: Math.abs(record.amount).toString(),
+      date: record.date.slice(0, 10),
+      txType: "expense",
+      wallet: record.category,
+      category: record.category,
+    });
+    setShowModal(true);
+  };
+
+  const handleDelete = async (id: string | number) => {
+    if (await confirm(t("Are you sure you want to delete this transaction?"))) {
+      const result = await deleteTransaction(id);
+      if (!result.success) {
+        await alert(`Xóa thất bại: ${result.error || "Lỗi không xác định"}`);
+      }
+    }
+  };
+
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!formData.name || !formData.amount) return;
+    
+    if (editingRecord) {
+      // Single row update
+      const success = await updateTransaction(
+        editingRecord.id,
+        formData.name,
+        formData.txType === "expense" ? -Number(formData.amount) : Number(formData.amount),
+        formData.date,
+        formData.category
+      );
+      if (success) {
+        setShowModal(false);
+        setEditingRecord(null);
+        setFormData({ ...formData, name: "", amount: "" });
+      }
+      return;
+    }
+
+    let debitAccount = "";
+    let creditAccount = "";
+
+    switch (formData.txType) {
+      case "expense":
+        debitAccount = formData.category; // Category gets positive value
+        creditAccount = formData.wallet; // Wallet loses value
+        break;
+      case "income":
+        debitAccount = formData.wallet; // Wallet gets positive value
+        creditAccount = formData.category; // Category loses value
+        break;
+      case "transfer":
+        debitAccount = formData.toAccount; // Destination wallet gets positive value
+        creditAccount = formData.fromAccount; // Source wallet loses value
+        break;
+      default:
+        debitAccount = formData.category;
+        creditAccount = formData.wallet;
+    }
+--- Add Trading Goods, Investment Income, and Investment Loss to categories arrays ---
+[
+  {
+    "AllowMultiple": false,
+    "EndLine": 74,
+    "ReplacementContent": "  const walletOptions = [\"Bank Account\", \"Cash\", \"Credit Card\", \"Trading Goods\"];\n  const allAccountsAndCategories = [\n    ...walletOptions,\n    \"Accounts Receivable\",\n    \"Liabilities\",\n    \"Food & Dining\", \"Shopping\", \"Transportation\", \"Entertainment\", \"Utilities\", \"Investment Loss\",\n    \"Salary\", \"Revenue\", \"INVESTMENT\", \"SAVINGS\", \"Capital\", \"Investment Income\"\n  ];\n  \n  const expenseCategories = [\"Food & Dining\", \"Shopping\", \"Transportation\", \"Entertainment\", \"Utilities\", \"Investment Loss\"];\n  const incomeCategories = [\"Salary\", \"Revenue\", \"INVESTMENT\", \"SAVINGS\", \"Capital\", \"Investment Income\"];",
+    "StartLine": 64,
+    "TargetContent": "  const walletOptions = [\"Bank Account\", \"Cash\", \"Credit Card\"];\n  const allAccountsAndCategories = [\n    ...walletOptions,\n    \"Accounts Receivable\",\n    \"Liabilities\",\n    \"Food & Dining\", \"Shopping\", \"Transportation\", \"Entertainment\", \"Utilities\",\n    \"Salary\", \"Revenue\", \"INVESTMENT\", \"SAVINGS\", \"Capital\"\n  ];\n  \n  const expenseCategories = [\"Food & Dining\", \"Shopping\", \"Transportation\", \"Entertainment\", \"Utilities\"];\n  const incomeCategories = [\"Salary\", \"Revenue\", \"INVESTMENT\", \"SAVINGS\", \"Capital\"];"
+  }
+]
+--- Import useLocation, useNavigate ---
+import { getCachedGoals } from "@/lib/googleSheetDb";
+import type { Goal } from "@/models/types";
+import { useLocation, useNavigate } from "react-router";
+--- Add query param handler ---
+  const location = useLocation();
+  const navigate = useNavigate();
+
+  useEffect(() => {
+    const cachedGoals = getCachedGoals();
+    setGoals(cachedGoals);
+    if (cachedGoals.length > 0) {
+      setFormData(prev => ({ ...prev, goal: cachedGoals[0].name }));
+    }
+    
+    // Auto-open add modal if requested
+    const searchParams = new URLSearchParams(location.search);
+    if (searchParams.get("add") === "true") {
+      setEditingRecord(null);
+      setShowModal(true);
+      // Clean up URL without triggering a full page reload
+      navigate("/records", { replace: true });
+    }
+  }, [location.search, navigate]);
+
+  const txTypes = [

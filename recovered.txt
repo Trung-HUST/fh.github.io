@@ -1,0 +1,45 @@
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!formData.name || !formData.amount) return;
+    
+    if (formData.txType === "contract") {
+      const { batchUpsertContracts } = await import("@/lib/sheet-db");
+      const isInstallment = formData.contractType === "INSTALLMENT";
+      const isSavings = formData.contractType === "SAVINGS";
+      
+      const success = await batchUpsertContracts([{
+        name: formData.name,
+        type: formData.contractType as any,
+        amount: Number(formData.amount) || 0,
+        interestRate: Number(formData.interestRate) || 0,
+        durationMonths: Number(formData.durationMonths) || 0,
+        quantity: Number(formData.quantity) || 0,
+        depreciationRate: Number(formData.depreciationRate) || 0,
+        startDate: formData.date,
+        nextDueDate: (isSavings || isInstallment)
+          ? new Date(new Date(formData.date).setMonth(new Date(formData.date).getMonth() + 1)).toISOString().slice(0, 10) 
+          : "",
+        wallet: formData.wallet,
+        targetWallet: formData.toAccount,
+        status: "ACTIVE"
+      }]);
+      
+      if (success) {
+        // Create an expense transaction to deduct cash
+        await addTransaction(
+          `Mua/Gửi: ${formData.name}`,
+          Number(formData.amount) || 0,
+          formData.date,
+          "Tài sản / Đầu tư", // category
+          formData.wallet      // from wallet
+        );
+
+        await alert(t("records.success", "Bản ghi đã được tạo thành công!"));
+        setShowModal(false);
+        setFormData({ ...formData, name: "", amount: "" });
+        window.location.reload();
+      } else {
+        await alert(t("records.error", "Có lỗi xảy ra khi tạo bản ghi."));
+      }
+      return;
+    }
