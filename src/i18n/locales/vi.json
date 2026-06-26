@@ -340,8 +340,18 @@
       "pay_debt": "Trả nợ (Pay Debt - Mình trả người khác)",
       "borrow": "Đi vay (Borrow - Mình mượn người khác)",
       "lend": "Cho vay (Lend - Mình cho mượn)",
+      "debt": "Cho vay / Vay nợ (Debt/Loan)",
       "fund_transfer": "Nạp quỹ (Fund Goal)"
-    }
+    },
+    "debtActionLabel": "Hành động (Action)",
+    "debtActions": {
+      "lend": "Cho vay",
+      "collect": "Thu nợ",
+      "borrow": "Vay nợ",
+      "repay": "Trả nợ"
+    },
+    "debtPersonLabel": "Đối tượng (Person)",
+    "debtPersonPlaceholder": "VD: Anh A, Chị B"
   },
   "portfolio": {
     "portfolioValue": "GIÁ TRỊ DANH MỤC",

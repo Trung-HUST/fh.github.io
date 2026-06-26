@@ -334,12 +334,23 @@
       "expense": "Expense",
       "income": "Income",
       "transfer": "Transfer",
+      "debt": "Debt/Loan",
       "collect_debt": "Collect Debt",
       "pay_debt": "Pay Debt",
       "borrow": "Borrow",
       "lend": "Lend",
+      "sell_asset": "Sell Asset",
       "fund_transfer": "Fund Goal"
     },
+    "debtActionLabel": "Action",
+    "debtActions": {
+      "lend": "Lend",
+      "collect": "Collect Debt",
+      "borrow": "Borrow",
+      "repay": "Repay Debt"
+    },
+    "debtPersonLabel": "Person",
+    "debtPersonPlaceholder": "e.g., John, Alice",
     "goalLabel": "Goal"
   },
   "portfolio": {

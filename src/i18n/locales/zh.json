@@ -383,8 +383,18 @@
       "pay_debt": "还债 (Pay Debt)",
       "borrow": "借入 (Borrow)",
       "lend": "借出 (Lend)",
+      "debt": "借入 / 借出 (Debt/Loan)",
       "fund_transfer": "目标资金池转账 (Fund Goal)"
     },
+    "debtActionLabel": "操作 (Action)",
+    "debtActions": {
+      "lend": "借出",
+      "collect": "收债",
+      "borrow": "借入",
+      "repay": "还债"
+    },
+    "debtPersonLabel": "对象 (Person)",
+    "debtPersonPlaceholder": "例如：张三，李四",
     "goalLabel": "目标 (Goal)"
   },
   "stats": {

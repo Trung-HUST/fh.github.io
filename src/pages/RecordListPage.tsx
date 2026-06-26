@@ -23,6 +23,8 @@ export default function RecordListPage() {
     amount: "",
     date: new Date().toISOString().slice(0, 10),
     txType: "expense",
+    debtAction: "lend",
+    debtPerson: "",
     wallet: "Bank Account",
     category: "Food & Dining",
     goal: "Emergency Fund",
@@ -60,6 +62,7 @@ export default function RecordListPage() {
     { id: "expense", label: t("records.txTypes.expense", "Chi tiêu (Expense)") },
     { id: "income", label: t("records.txTypes.income", "Thu nhập (Income)") },
     { id: "transfer", label: t("records.txTypes.transfer", "Chuyển tiền (Transfer)") },
+    { id: "debt", label: t("records.txTypes.debt", "Cho vay / Vay nợ (Debt/Loan)") },
     { id: "contract", label: "Tài sản / Hợp đồng" },
   ];
 
@@ -196,6 +199,23 @@ export default function RecordListPage() {
         debitAccount = formData.toAccount; // Destination wallet gets positive value
         creditAccount = formData.fromAccount; // Source wallet loses value
         break;
+      case "debt": {
+        const personStr = formData.debtPerson.trim() ? ` - ${formData.debtPerson.trim()}` : "";
+        if (formData.debtAction === "lend") {
+          debitAccount = "Khoản phải thu" + personStr;
+          creditAccount = formData.wallet;
+        } else if (formData.debtAction === "collect") {
+          debitAccount = formData.wallet;
+          creditAccount = "Khoản phải thu" + personStr;
+        } else if (formData.debtAction === "borrow") {
+          debitAccount = formData.wallet;
+          creditAccount = "Khoản phải trả" + personStr;
+        } else if (formData.debtAction === "repay") {
+          debitAccount = "Khoản phải trả" + personStr;
+          creditAccount = formData.wallet;
+        }
+        break;
+      }
       default:
         debitAccount = formData.category;
         creditAccount = formData.wallet;
@@ -235,6 +255,8 @@ export default function RecordListPage() {
             amount: "",
             date: new Date().toISOString().slice(0, 10),
             txType: "expense",
+            debtAction: "lend",
+            debtPerson: "",
             wallet: "Bank Account",
             category: "Food & Dining",
             goal: goals.length > 0 ? goals[0].name : "",
@@ -289,6 +311,28 @@ export default function RecordListPage() {
                     <label className="block text-matrix-dim mb-1 text-xs uppercase">{t("records.categoryWalletLabel", "Hạng mục / Ví (Category/Wallet)")}</label>
                     <input required type="text" value={formData.category} onChange={e => setFormData({...formData, category: e.target.value})} className="w-full bg-black border border-matrix-ghost/50 text-matrix-primary p-2 focus:border-matrix-primary focus:outline-none" />
                   </div>
+                ) : formData.txType === "debt" ? (
+                  <>
+                    <div className="col-span-2">
+                      <label className="block text-matrix-dim mb-1 text-xs uppercase">{t("records.debtActionLabel", "Hành động (Action)")}</label>
+                      <select value={formData.debtAction} onChange={e => setFormData({...formData, debtAction: e.target.value})} className="w-full bg-black border border-matrix-ghost/50 text-matrix-primary p-2 focus:border-matrix-primary focus:outline-none">
+                        <option value="lend" className="bg-black text-matrix-primary">{t("records.debtActions.lend", "Cho vay")}</option>
+                        <option value="collect" className="bg-black text-matrix-primary">{t("records.debtActions.collect", "Thu nợ")}</option>
+                        <option value="borrow" className="bg-black text-matrix-primary">{t("records.debtActions.borrow", "Vay nợ")}</option>
+                        <option value="repay" className="bg-black text-matrix-primary">{t("records.debtActions.repay", "Trả nợ")}</option>
+                      </select>
+                    </div>
+                    <div className="col-span-2">
+                      <label className="block text-matrix-dim mb-1 text-xs uppercase">{t("records.debtPersonLabel", "Đối tượng (Person)")}</label>
+                      <input required type="text" value={formData.debtPerson} placeholder={t("records.debtPersonPlaceholder", "VD: Anh A, Chị B")} onChange={e => setFormData({...formData, debtPerson: e.target.value})} className="w-full bg-black border border-matrix-ghost/50 text-matrix-primary p-2 focus:border-matrix-primary focus:outline-none" />
+                    </div>
+                    <div className="col-span-2">
+                      <label className="block text-matrix-dim mb-1 text-xs uppercase">{t("records.walletLabel", "Ví tiền (Wallet)")}</label>
+                      <select value={formData.wallet} onChange={e => setFormData({...formData, wallet: e.target.value})} className="w-full bg-black border border-matrix-ghost/50 text-matrix-primary p-2 focus:border-matrix-primary focus:outline-none">
+                        {walletOptions.map(opt => <option key={opt} value={opt} className="bg-black text-matrix-primary">{t(`dashboard.categories.${opt}`, opt)}</option>)}
+                      </select>
+                    </div>
+                  </>
                 ) : formData.txType === "contract" ? (
                   <>
                     <div className="col-span-2">
