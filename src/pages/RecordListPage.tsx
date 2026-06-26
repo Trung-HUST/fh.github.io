@@ -4,7 +4,7 @@ import { MatrixButton } from "@/components/ui/MatrixButton";
 import { useRecordListViewModel } from "@/viewmodels/useRecordListViewModel";
 import { cn } from "@/lib/utils";
 import { useTranslation } from "react-i18next";
-import { useState, useEffect } from "react";
+import { useState, useEffect, useMemo } from "react";
 import { useMatrixDialog } from "@/contexts/MatrixDialogContext";
 import { getCachedGoals } from "@/lib/googleSheetDb";
 import type { Goal } from "@/models/types";
@@ -69,6 +69,20 @@ export default function RecordListPage() {
   const walletOptions = ["Cash", "BankAccount", "CreditCardDebt", "TradingGoods"];
   const expenseCategories = ["FoodDining", "Shopping", "Transportation", "Entertainment", "Utilities", "InvestmentLoss", "RealEstateMaintenance"];
   const incomeCategories = ["Salary", "OtherIncome", "Investment", "SavingsDeposit", "InitialCapital", "InvestmentIncome", "Gold", "RealEstate", "RealEstateProfit", "Vehicle", "Liabilities"];
+
+  const recentPersons = useMemo(() => {
+    const persons = new Set<string>();
+    records.forEach(r => {
+      const cat = ((r as any).detail || r.category || "").trim();
+      if (cat.toLowerCase().startsWith("khoản phải thu -") || cat.toLowerCase().startsWith("khoản phải trả -")) {
+        const parts = cat.split("-");
+        if (parts.length > 1) {
+          persons.add(parts.slice(1).join("-").trim());
+        }
+      }
+    });
+    return Array.from(persons);
+  }, [records]);
 
   const handleEdit = (record: any) => {
     setEditingRecord(record);
@@ -324,7 +338,10 @@ export default function RecordListPage() {
                     </div>
                     <div className="col-span-2">
                       <label className="block text-matrix-dim mb-1 text-xs uppercase">{t("records.debtPersonLabel", "Đối tượng (Person)")}</label>
-                      <input required type="text" value={formData.debtPerson} placeholder={t("records.debtPersonPlaceholder", "VD: Anh A, Chị B")} onChange={e => setFormData({...formData, debtPerson: e.target.value})} className="w-full bg-black border border-matrix-ghost/50 text-matrix-primary p-2 focus:border-matrix-primary focus:outline-none" />
+                      <input required type="text" list="recent-persons" value={formData.debtPerson} placeholder={t("records.debtPersonPlaceholder", "VD: Anh A, Chị B")} onChange={e => setFormData({...formData, debtPerson: e.target.value})} className="w-full bg-black border border-matrix-ghost/50 text-matrix-primary p-2 focus:border-matrix-primary focus:outline-none" />
+                      <datalist id="recent-persons">
+                        {recentPersons.map(p => <option key={p} value={p} />)}
+                      </datalist>
                     </div>
                     <div className="col-span-2">
                       <label className="block text-matrix-dim mb-1 text-xs uppercase">{t("records.walletLabel", "Ví tiền (Wallet)")}</label>
