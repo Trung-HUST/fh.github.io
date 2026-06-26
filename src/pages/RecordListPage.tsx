@@ -1,6 +1,7 @@
 import { AsciiBox } from "@/components/ui/AsciiBox";
 import { ConnectionStatus } from "@/components/ui/MatrixExtras";
 import { MatrixButton } from "@/components/ui/MatrixButton";
+import { MatrixDatePicker } from "@/components/ui/MatrixDatePicker";
 import { useRecordListViewModel } from "@/viewmodels/useRecordListViewModel";
 import { cn } from "@/lib/utils";
 import { useTranslation } from "react-i18next";
@@ -307,7 +308,11 @@ export default function RecordListPage() {
                 </div>
                 <div>
                   <label className="block text-matrix-dim mb-1 text-xs uppercase">{t("records.dateLabel", "Ngày (Date)")}</label>
-                  <input required type="date" value={formData.date} onChange={e => setFormData({...formData, date: e.target.value})} className="w-full bg-black border border-matrix-ghost/50 text-matrix-primary p-2 focus:border-matrix-primary focus:outline-none" />
+                  <MatrixDatePicker 
+                    value={formData.date} 
+                    onChange={val => setFormData({...formData, date: val})} 
+                    required 
+                  />
                 </div>
               </div>
               
