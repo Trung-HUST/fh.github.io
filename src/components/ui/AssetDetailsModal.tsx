@@ -38,7 +38,15 @@ export function AssetDetailsModal({ assetClass, assetType, contracts, transactio
   
   const accountTransactions = assetType === 'ACCOUNT' && transactions
     ? transactions.filter(t => {
-        const cat = ((t as any).category || (t as any).detail || "").toLowerCase();
+        const cat = ((t as any).category || (t as any).detail || "").toLowerCase().trim();
+        
+        if (assetClass === 'AccountsReceivable' && (cat.startsWith('khoản phải thu') || cat.startsWith('accounts receivable') || cat.startsWith('khoan phai thu'))) {
+          return true;
+        }
+        if (assetClass === 'Liabilities' && (cat.startsWith('khoản phải trả') || cat.startsWith('liabilities') || cat.startsWith('khoan phai tra'))) {
+          return true;
+        }
+        
         return matches.includes(cat);
       })
     : [];
