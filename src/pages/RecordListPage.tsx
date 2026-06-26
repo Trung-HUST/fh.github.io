@@ -17,6 +17,7 @@ export default function RecordListPage() {
   const [showModal, setShowModal] = useState(false);
   const [editingRecord, setEditingRecord] = useState<any>(null);
   const [isSaving, setIsSaving] = useState(false);
+  const [showPersonSuggestions, setShowPersonSuggestions] = useState(false);
   
   const [formData, setFormData] = useState({
     name: "",
@@ -336,12 +337,39 @@ export default function RecordListPage() {
                         <option value="repay" className="bg-black text-matrix-primary">{t("records.debtActions.repay", "Trả nợ")}</option>
                       </select>
                     </div>
-                    <div className="col-span-2">
+                    <div className="col-span-2 relative">
                       <label className="block text-matrix-dim mb-1 text-xs uppercase">{t("records.debtPersonLabel", "Đối tượng (Person)")}</label>
-                      <input required type="text" list="recent-persons" value={formData.debtPerson} placeholder={t("records.debtPersonPlaceholder", "VD: Anh A, Chị B")} onChange={e => setFormData({...formData, debtPerson: e.target.value})} className="w-full bg-black border border-matrix-ghost/50 text-matrix-primary p-2 focus:border-matrix-primary focus:outline-none" />
-                      <datalist id="recent-persons">
-                        {recentPersons.map(p => <option key={p} value={p} />)}
-                      </datalist>
+                      <input 
+                        required 
+                        type="text" 
+                        value={formData.debtPerson} 
+                        placeholder={t("records.debtPersonPlaceholder", "VD: Anh A, Chị B")} 
+                        onChange={e => {
+                          setFormData({...formData, debtPerson: e.target.value});
+                          setShowPersonSuggestions(true);
+                        }}
+                        onFocus={() => setShowPersonSuggestions(true)}
+                        onBlur={() => setTimeout(() => setShowPersonSuggestions(false), 200)}
+                        className="w-full bg-black border border-matrix-ghost/50 text-matrix-primary p-2 focus:border-matrix-primary focus:outline-none" 
+                      />
+                      {showPersonSuggestions && recentPersons.filter(p => p.toLowerCase().includes(formData.debtPerson.toLowerCase()) && p !== formData.debtPerson).length > 0 && (
+                        <ul className="absolute z-50 w-full bg-[#0D0D0D] border border-matrix-primary/50 max-h-40 overflow-y-auto mt-1 shadow-[0_0_10px_rgba(0,255,65,0.2)]">
+                          {recentPersons
+                            .filter(p => p.toLowerCase().includes(formData.debtPerson.toLowerCase()) && p !== formData.debtPerson)
+                            .map(p => (
+                              <li 
+                                key={p} 
+                                className="p-2 cursor-pointer hover:bg-matrix-primary/20 text-matrix-primary border-b border-matrix-primary/10 last:border-none font-mono text-sm"
+                                onClick={() => {
+                                  setFormData({...formData, debtPerson: p});
+                                  setShowPersonSuggestions(false);
+                                }}
+                              >
+                                {p}
+                              </li>
+                          ))}
+                        </ul>
+                      )}
                     </div>
                     <div className="col-span-2">
                       <label className="block text-matrix-dim mb-1 text-xs uppercase">{t("records.walletLabel", "Ví tiền (Wallet)")}</label>
