@@ -272,7 +272,7 @@ export function useDashboardViewModel() {
         if (t.deleted) return;
         const cat = ((t as any).detail || t.category || "").toLowerCase();
         if (netWorthNames.includes(cat) || 
-            cat.startsWith("khoản phải thu") || cat.startsWith("accounts receivable") ||
+            cat.startsWith("khoản phải thu") || cat.startsWith("accounts receivable") || cat.startsWith("accountsreceivable") ||
             cat.startsWith("khoản phải trả") || cat.startsWith("liabilities")) {
           const txDate = new Date(t.date);
           txDate.setHours(0, 0, 0, 0);

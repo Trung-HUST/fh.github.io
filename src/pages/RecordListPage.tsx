@@ -76,7 +76,8 @@ export default function RecordListPage() {
     const persons = new Set<string>();
     records.forEach(r => {
       const cat = ((r as any).detail || r.category || "").trim();
-      if (cat.toLowerCase().startsWith("khoản phải thu -") || cat.toLowerCase().startsWith("khoản phải trả -")) {
+      if (cat.toLowerCase().startsWith("khoản phải thu -") || cat.toLowerCase().startsWith("khoản phải trả -") ||
+          cat.toLowerCase().startsWith("accountsreceivable-") || cat.toLowerCase().startsWith("liabilities-")) {
         const parts = cat.split("-");
         if (parts.length > 1) {
           persons.add(parts.slice(1).join("-").trim());
@@ -144,24 +145,24 @@ export default function RecordListPage() {
         let creditAccount = formData.wallet;
         
         if (formData.contractType === "SAVINGS") {
-          debitAccount = "Gửi tiết kiệm";
+          debitAccount = "Savings";
         } else if (formData.contractType === "GOLD") {
-          debitAccount = "Vàng";
+          debitAccount = "Gold";
         } else if (formData.contractType === "REAL_ESTATE") {
-          debitAccount = "Bất động sản";
+          debitAccount = "RealEstate";
         } else if (formData.contractType === "VEHICLE") {
-          debitAccount = "Xe cộ";
+          debitAccount = "Vehicle";
         } else if (formData.contractType === "STOCK") {
-          debitAccount = "Cổ phiếu";
+          debitAccount = "Stock";
         } else if (formData.contractType === "BOND") {
-          debitAccount = "Trái phiếu";
+          debitAccount = "Bond";
         } else if (formData.contractType === "CRYPTO") {
-          debitAccount = "Tài sản điện tử";
+          debitAccount = "Crypto";
         } else if (formData.contractType === "OTHER_ASSET") {
-          debitAccount = "Đầu tư khác";
+          debitAccount = "OtherAsset";
         } else if (formData.contractType === "INSTALLMENT") {
-          debitAccount = "Tài sản / Đầu tư";
-          creditAccount = "Khoản phải trả";
+          debitAccount = "Investment";
+          creditAccount = "Liabilities";
         }
 
         await addTransaction(
@@ -216,18 +217,18 @@ export default function RecordListPage() {
         creditAccount = formData.fromAccount; // Source wallet loses value
         break;
       case "debt": {
-        const personStr = formData.debtPerson.trim() ? ` - ${formData.debtPerson.trim()}` : "";
+        const personStr = formData.debtPerson.trim() ? `-${formData.debtPerson.trim()}` : "";
         if (formData.debtAction === "lend") {
-          debitAccount = "Khoản phải thu" + personStr;
+          debitAccount = "AccountsReceivable" + personStr;
           creditAccount = formData.wallet;
         } else if (formData.debtAction === "collect") {
           debitAccount = formData.wallet;
-          creditAccount = "Khoản phải thu" + personStr;
+          creditAccount = "AccountsReceivable" + personStr;
         } else if (formData.debtAction === "borrow") {
           debitAccount = formData.wallet;
-          creditAccount = "Khoản phải trả" + personStr;
+          creditAccount = "Liabilities" + personStr;
         } else if (formData.debtAction === "repay") {
-          debitAccount = "Khoản phải trả" + personStr;
+          debitAccount = "Liabilities" + personStr;
           creditAccount = formData.wallet;
         }
         break;

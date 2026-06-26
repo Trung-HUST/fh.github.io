@@ -23,11 +23,11 @@ export function AssetDetailsModal({ assetClass, assetType, contracts, transactio
   
   const getCategoryMatches = (aClass: string): string[] => {
     switch(aClass) {
-      case 'AccountsReceivable': return ['accounts receivable', 'khoản phải thu', 'khoan phai thu'];
-      case 'BankAccount': return ['bank account', 'tài khoản ngân hàng', 'tai khoan ngan hang'];
+      case 'AccountsReceivable': return ['accounts receivable', 'accountsreceivable', 'khoản phải thu', 'khoan phai thu'];
+      case 'BankAccount': return ['bank account', 'bankaccount', 'tài khoản ngân hàng', 'tai khoan ngan hang'];
       case 'Cash': return ['cash', 'tiền mặt', 'tien mat'];
-      case 'EWallet': return ['e-wallet', 'ví điện tử', 'vi dien tu'];
-      case 'CreditCardDebt': return ['credit card', 'thẻ tín dụng', 'the tin dung'];
+      case 'EWallet': return ['e-wallet', 'ewallet', 'ví điện tử', 'vi dien tu'];
+      case 'CreditCardDebt': return ['credit card', 'creditcarddebt', 'thẻ tín dụng', 'the tin dung'];
       case 'Liabilities': return ['liabilities', 'khoản phải trả', 'khoan phai tra'];
       default:
         return [aClass.toLowerCase()];
@@ -40,7 +40,7 @@ export function AssetDetailsModal({ assetClass, assetType, contracts, transactio
     ? transactions.filter(t => {
         const cat = ((t as any).category || (t as any).detail || "").toLowerCase().trim();
         
-        if (assetClass === 'AccountsReceivable' && (cat.startsWith('khoản phải thu') || cat.startsWith('accounts receivable') || cat.startsWith('khoan phai thu'))) {
+        if (assetClass === 'AccountsReceivable' && (cat.startsWith('khoản phải thu') || cat.startsWith('accounts receivable') || cat.startsWith('accountsreceivable') || cat.startsWith('khoan phai thu'))) {
           return true;
         }
         if (assetClass === 'Liabilities' && (cat.startsWith('khoản phải trả') || cat.startsWith('liabilities') || cat.startsWith('khoan phai tra'))) {
