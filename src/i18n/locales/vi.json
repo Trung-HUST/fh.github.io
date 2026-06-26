@@ -336,6 +336,7 @@
       "expense": "Chi tiêu (Expense)",
       "income": "Thu nhập (Income)",
       "transfer": "Chuyển tiền / Bút toán (Transfer)",
+      "contract": "Tài sản / Hợp đồng (Asset/Contract)",
       "collect_debt": "Thu nợ (Collect Debt - Người khác trả)",
       "pay_debt": "Trả nợ (Pay Debt - Mình trả người khác)",
       "borrow": "Đi vay (Borrow - Mình mượn người khác)",

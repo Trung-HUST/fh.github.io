@@ -63,7 +63,7 @@ export default function RecordListPage() {
     { id: "income", label: t("records.txTypes.income", "Thu nhập (Income)") },
     { id: "transfer", label: t("records.txTypes.transfer", "Chuyển tiền (Transfer)") },
     { id: "debt", label: t("records.txTypes.debt", "Cho vay / Vay nợ (Debt/Loan)") },
-    { id: "contract", label: "Tài sản / Hợp đồng" },
+    { id: "contract", label: t("records.txTypes.contract", "Tài sản / Hợp đồng") },
   ];
 
   const walletOptions = ["Cash", "BankAccount", "CreditCardDebt", "TradingGoods"];

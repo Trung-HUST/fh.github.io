@@ -379,6 +379,7 @@
       "expense": "支出 (Expense)",
       "income": "收入 (Income)",
       "transfer": "转账 (Transfer)",
+      "contract": "资产 / 合同 (Asset/Contract)",
       "collect_debt": "收债 (Collect Debt)",
       "pay_debt": "还债 (Pay Debt)",
       "borrow": "借入 (Borrow)",

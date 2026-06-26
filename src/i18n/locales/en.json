@@ -335,6 +335,7 @@
       "income": "Income",
       "transfer": "Transfer",
       "debt": "Debt/Loan",
+      "contract": "Asset / Contract",
       "collect_debt": "Collect Debt",
       "pay_debt": "Pay Debt",
       "borrow": "Borrow",
