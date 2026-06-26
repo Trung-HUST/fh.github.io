@@ -225,6 +225,16 @@ function sumByCategory(transactions: Transaction[], category: string) {
         const rawTxCat = ((transaction as any).detail || transaction.category || "").trim();
         const txCat = rawTxCat.toLowerCase();
         const txMappedCategory = mapOldCategoryToNew(rawTxCat).toLowerCase().trim();
+        
+        if ((originalCategory === "accounts receivable" || originalCategory === "khoản phải thu") && 
+            (txCat.startsWith("khoản phải thu") || txCat.startsWith("accounts receivable"))) {
+          return true;
+        }
+        if ((originalCategory === "liabilities" || originalCategory === "khoản phải trả") && 
+            (txCat.startsWith("khoản phải trả") || txCat.startsWith("liabilities"))) {
+          return true;
+        }
+
         return txCat === originalCategory || txCat === mappedCategory || txMappedCategory === originalCategory || txMappedCategory === mappedCategory;
       })
       .reduce((sum, transaction) => {
