@@ -51,6 +51,31 @@ export function AssetDetailsModal({ assetClass, assetType, contracts, transactio
       })
     : [];
 
+  const personBreakdown = React.useMemo(() => {
+    if (assetClass !== 'AccountsReceivable' && assetClass !== 'Liabilities') return null;
+    if (!accountTransactions || accountTransactions.length === 0) return null;
+    
+    const balances: Record<string, number> = {};
+    accountTransactions.forEach(t => {
+      const cat = ((t as any).category || (t as any).detail || "").trim();
+      if (!cat) return;
+      
+      let personName = "Chung (Không rõ đối tượng)";
+      if (cat.includes("-")) {
+        personName = cat.split("-").slice(1).join("-").trim();
+      }
+      
+      if (!balances[personName]) balances[personName] = 0;
+      balances[personName] += t.amount;
+    });
+    
+    const activeBalances = Object.entries(balances)
+      .filter(([_, amount]) => Math.abs(amount) > 10)
+      .sort((a, b) => Math.abs(b[1]) - Math.abs(a[1]));
+      
+    return activeBalances.length > 0 ? activeBalances : null;
+  }, [assetClass, accountTransactions]);
+
   const [activeContracts, setActiveContracts] = useState<Contract[]>(contracts.filter(c => c?.type === assetClass && c?.status === "ACTIVE" && !c?.deleted));
   const [soldContracts, setSoldContracts] = useState<Contract[]>(contracts.filter(c => c?.type === assetClass && c?.status === "COMPLETED" && !c?.deleted));
   
@@ -261,8 +286,25 @@ export function AssetDetailsModal({ assetClass, assetType, contracts, transactio
           
           <div className="overflow-y-auto pr-2 custom-scrollbar flex-1" style={{ maxHeight: "calc(90vh - 120px)" }}>
             {assetType === 'ACCOUNT' ? (
-              <div className="mb-6">
-                <h4 className="font-mono text-matrix-dim mb-2 uppercase text-sm border-b border-matrix-ghost/30 pb-1">{t("dashboard.recentActivity", "Lịch sử giao dịch")}</h4>
+              <div className="mb-6 flex flex-col gap-6">
+                {personBreakdown && (
+                  <div>
+                    <h4 className="font-mono text-matrix-dim mb-2 uppercase text-sm border-b border-matrix-ghost/30 pb-1">{t("dashboard.personBreakdown", "Phân bổ chi tiết (Người)")}</h4>
+                    <div className="space-y-3">
+                      {personBreakdown.map(([person, amount], idx) => (
+                        <div key={idx} className="border border-matrix-primary/30 p-3 bg-matrix-primary/10 flex justify-between items-center">
+                          <span className="font-mono text-matrix-primary font-bold">{person}</span>
+                          <span className={`font-mono text-sm ${amount > 0 ? 'text-matrix-primary' : 'text-red-400'}`}>
+                            {amount > 0 ? '+' : ''}{formatCurrency(amount)}
+                          </span>
+                        </div>
+                      ))}
+                    </div>
+                  </div>
+                )}
+                
+                <div>
+                  <h4 className="font-mono text-matrix-dim mb-2 uppercase text-sm border-b border-matrix-ghost/30 pb-1">{t("dashboard.recentActivity", "Lịch sử giao dịch")}</h4>
                 <div className="space-y-3">
                   {accountTransactions.length === 0 ? (
                     <p className="text-matrix-dim text-sm text-center py-4 font-mono">
@@ -282,6 +324,7 @@ export function AssetDetailsModal({ assetClass, assetType, contracts, transactio
                     ))
                   )}
                 </div>
+              </div>
               </div>
             ) : (
             <>
