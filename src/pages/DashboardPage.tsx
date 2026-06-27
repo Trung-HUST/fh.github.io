@@ -361,7 +361,12 @@ export default function DashboardPage() {
           <div key={account.name} onClick={() => handleAccountClick(account.name)} className="cursor-pointer transition-transform hover:scale-[1.02]">
             <AsciiBox title={t(`dashboard.accounts.${account.name}`, account.name).toUpperCase()}>
               <div className="space-y-2">
-                <p className="font-mono text-xl text-matrix-primary glow-text">
+                <p className={cn(
+                  "font-mono text-xl glow-text",
+                  account.name.toLowerCase().includes("liabilities") || account.name.toLowerCase().includes("khoản phải trả") || account.name.toLowerCase().includes("credit card") || account.name.toLowerCase().includes("thẻ tín dụng")
+                  ? "text-red-400"
+                  : "text-matrix-primary"
+                )}>
                   {formatCurrency(account.balance)}
                 </p>
                 <div className="flex items-center justify-between">

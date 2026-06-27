@@ -40,7 +40,12 @@ export default function AccountsPage() {
         {accountList.map((account) => (
           <AsciiBox key={account.name} title={t(`accounts.${account.name.replace(/ /g, "")}`, account.name).toUpperCase()}>
             <div className="space-y-3">
-              <p className="font-mono text-xl text-matrix-primary">
+              <p className={cn(
+                "font-mono text-xl",
+                account.name.toLowerCase().includes("liabilities") || account.name.toLowerCase().includes("khoản phải trả") || account.name.toLowerCase().includes("credit card") || account.name.toLowerCase().includes("thẻ tín dụng")
+                ? "text-red-400"
+                : "text-matrix-primary"
+              )}>
                 {formatCurrency(account.balance)}
               </p>
               <DataRow
