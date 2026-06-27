@@ -256,9 +256,11 @@ export function useDashboardViewModel() {
     today.setHours(0, 0, 0, 0);
     const equityAccounts = ["capital", "vốn ban đầu", "vốn"];
     const assetLiabilityNames = [
-      "credit card", "thẻ tín dụng", "bank account", "tài khoản ngân hàng",
-      "cash", "tiền mặt", "accounts receivable", "khoản phải thu",
-      "liabilities", "khoản phải trả"
+      "credit card", "thẻ tín dụng", "creditcarddebt", "bank account", "tài khoản ngân hàng", "bankaccount",
+      "cash", "tiền mặt", "accounts receivable", "khoản phải thu", "accountsreceivable",
+      "liabilities", "khoản phải trả", "capital", "vốn ban đầu", "vốn",
+      ...baseGoals.map(g => g.name.toLowerCase()),
+      ...(getCachedCards() || []).map(c => c.name.toLowerCase())
     ];
     const netWorthNames = assetLiabilityNames.filter(a => !equityAccounts.includes(a));
 
