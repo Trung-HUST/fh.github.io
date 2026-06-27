@@ -255,6 +255,7 @@ export function useDashboardViewModel() {
     const today = new Date();
     today.setHours(0, 0, 0, 0);
     const equityAccounts = ["capital", "vốn ban đầu", "vốn"];
+    const baseGoals = getCachedGoals();
     const assetLiabilityNames = [
       "credit card", "thẻ tín dụng", "creditcarddebt", "bank account", "tài khoản ngân hàng", "bankaccount",
       "cash", "tiền mặt", "accounts receivable", "khoản phải thu", "accountsreceivable",
