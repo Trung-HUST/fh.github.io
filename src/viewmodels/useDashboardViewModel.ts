@@ -364,9 +364,10 @@ export function useDashboardViewModel() {
       { id: 'OTHER_ASSET', name: 'OtherAsset', count: safeContracts.filter(c => c?.type === 'OTHER_ASSET' && c?.status === 'ACTIVE' && !c?.deleted).length, value: safeContracts.filter(c => c?.type === 'OTHER_ASSET' && c?.status === 'ACTIVE' && !c?.deleted).reduce((acc, c) => acc + (c?.currentValue || c?.amount || 0), 0), type: 'CONTRACT_GROUP' },
     ].filter(a => a.value > 0 || (a.type === 'CONTRACT_GROUP' && a.count > 0) || a.id === 'Funds');
 
+    const totalDebt = safeAccountList.filter(a => a?.name === "CreditCardDebt" || a?.name === "Liabilities").reduce((acc, a) => acc + (a?.balance || 0), 0);
     const totalAssets = assetBreakdown
       .filter(item => item.id !== 'Funds' && item.id !== 'FUNDS')
-      .reduce((acc, item) => acc + (item.value || 0), 0);
+      .reduce((acc, item) => acc + (item.value || 0), 0) - totalDebt;
 
   return {
     accountList,

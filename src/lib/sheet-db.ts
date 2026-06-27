@@ -311,7 +311,7 @@ function buildDashboardSnapshot(transactions: Transaction[]): SheetDashboardSnap
       change: "+0.0%",
     },
     {
-      name: "CreditCardDebt",
+      name: "Liabilities",
       balance: Math.abs(sumByCategory(validTransactions, "Credit Card") + sumByCategory(validTransactions, "Liabilities")),
       currency: "VND",
       change: "+0.0%",
