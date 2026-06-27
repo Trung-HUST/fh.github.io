@@ -34,6 +34,7 @@ export default function RecordListPage() {
     toAccount: "Bank Account",
     contractType: "SAVINGS",
     interestRate: "",
+    interestAmount: "",
     durationMonths: "",
     quantity: "",
     depreciationRate: ""
@@ -217,7 +218,15 @@ export default function RecordListPage() {
         creditAccount = formData.fromAccount; // Source wallet loses value
         break;
       case "debt": {
+        let finalName = formData.name;
         const personStr = formData.debtPerson.trim() ? `-${formData.debtPerson.trim()}` : "";
+        
+        if (formData.debtAction === "lend" || formData.debtAction === "borrow") {
+          if (formData.interestRate && Number(formData.interestRate) > 0) {
+            finalName += ` (Lãi: ${formData.interestRate}%/năm)`;
+          }
+        }
+        
         if (formData.debtAction === "lend") {
           debitAccount = "AccountsReceivable" + personStr;
           creditAccount = formData.wallet;
@@ -231,7 +240,43 @@ export default function RecordListPage() {
           debitAccount = "Liabilities" + personStr;
           creditAccount = formData.wallet;
         }
-        break;
+
+        let success = await addTransaction(
+          finalName,
+          Number(formData.amount),
+          formData.date,
+          debitAccount,
+          creditAccount
+        );
+        
+        if (success && (formData.debtAction === "collect" || formData.debtAction === "repay") && Number(formData.interestAmount) > 0) {
+           let intDebit = "";
+           let intCredit = "";
+           if (formData.debtAction === "collect") {
+              intDebit = formData.wallet;
+              intCredit = "InvestmentIncome"; 
+           } else {
+              intDebit = "InterestExpense";
+              intCredit = formData.wallet;
+           }
+           success = await addTransaction(
+             `Tiền lãi: ${formData.name}`,
+             Number(formData.interestAmount),
+             formData.date,
+             intDebit,
+             intCredit
+           );
+        }
+
+        if (success) {
+          await alert(t("records.success", "Bản ghi đã được tạo thành công!"));
+          setShowModal(false);
+          setFormData({ ...formData, name: "", amount: "", interestRate: "", interestAmount: "" });
+        } else {
+          await alert(t("records.error", "Có lỗi xảy ra khi tạo bản ghi."));
+        }
+        setIsSaving(false);
+        return;
       }
       default:
         debitAccount = formData.category;
@@ -383,6 +428,18 @@ export default function RecordListPage() {
                         {walletOptions.map(opt => <option key={opt} value={opt} className="bg-black text-matrix-primary">{t(`dashboard.categories.${opt}`, opt)}</option>)}
                       </select>
                     </div>
+                    {(formData.debtAction === "lend" || formData.debtAction === "borrow") && (
+                      <div className="col-span-2">
+                        <label className="block text-matrix-dim mb-1 text-xs uppercase">{t("records.debtInterestRateLabel", "Lãi suất (%/năm) - Không bắt buộc")}</label>
+                        <input type="number" step="0.01" value={formData.interestRate} onChange={e => setFormData({...formData, interestRate: e.target.value})} placeholder="0" className="w-full bg-black border border-matrix-ghost/50 text-matrix-primary p-2 focus:border-matrix-primary focus:outline-none" />
+                      </div>
+                    )}
+                    {(formData.debtAction === "collect" || formData.debtAction === "repay") && (
+                      <div className="col-span-2">
+                        <label className="block text-matrix-dim mb-1 text-xs uppercase">{formData.debtAction === "collect" ? t("records.debtInterestReceivedLabel", "Tiền lãi thực nhận - Không bắt buộc") : t("records.debtInterestPaidLabel", "Tiền lãi thực trả - Không bắt buộc")}</label>
+                        <input type="number" step="0.01" value={formData.interestAmount} onChange={e => setFormData({...formData, interestAmount: e.target.value})} placeholder="0" className="w-full bg-black border border-matrix-ghost/50 text-matrix-primary p-2 focus:border-matrix-primary focus:outline-none" />
+                      </div>
+                    )}
                   </>
                 ) : formData.txType === "contract" ? (
                   <>
