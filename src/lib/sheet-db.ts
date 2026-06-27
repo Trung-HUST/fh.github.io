@@ -360,8 +360,15 @@ function buildDashboardSnapshot(transactions: Transaction[]): SheetDashboardSnap
     // Bỏ qua các giao dịch tài sản để không làm méo biểu đồ dòng tiền (Monthly Flow)
     if (t.name?.startsWith("Mua/Gửi: ") || t.name?.startsWith("Hoàn gốc tiết kiệm: ")) return;
     
-    const cat = ((t as any).detail || t.category || "").toLowerCase();
-    if (cashWallets.includes(cat)) {
+    const cat = ((t as any).detail || t.category || "").toLowerCase().trim();
+    const isCashWallet = cashWallets.includes(cat) || 
+                         cat.startsWith("khoản phải thu") || 
+                         cat.startsWith("accounts receivable") || 
+                         cat.startsWith("accountsreceivable") || 
+                         cat.startsWith("khoản phải trả") || 
+                         cat.startsWith("liabilities");
+
+    if (isCashWallet) {
       const key = `${t.name || "Unknown"}|${t.date || "Unknown"}`;
       const existing = cashEvents.get(key) || { amount: 0, date: t.date, index };
       existing.amount += (Number(t.amount) || 0);
