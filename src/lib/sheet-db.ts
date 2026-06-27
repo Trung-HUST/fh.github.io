@@ -327,17 +327,14 @@ function buildDashboardSnapshot(transactions: Transaction[]): SheetDashboardSnap
   const assetLiabilityNames = [
     "credit card",
     "thẻ tín dụng",
-    "creditcarddebt",
     "bank account",
     "tài khoản ngân hàng",
-    "bankaccount",
     "cash",
     "tiền mặt",
     "investment",
     "các quỹ",
     "accounts receivable",
     "khoản phải thu",
-    "accountsreceivable",
     "liabilities",
     "khoản phải trả",
     "capital",
@@ -347,49 +344,41 @@ function buildDashboardSnapshot(transactions: Transaction[]): SheetDashboardSnap
     ...(getCachedCards() || []).map(c => c.name.toLowerCase())
   ];
 
-  const cashWallets = [
-    "bank account", "tài khoản ngân hàng", "bankaccount", 
-    "cash", "tiền mặt",
-    "credit card", "thẻ tín dụng", "creditcarddebt"
-  ];
-
-  const cashEvents = new Map<string, { amount: number, date: string, index: number }>();
-
-  validTransactions.forEach((t, index) => {
-    // Bỏ qua các giao dịch tài sản để không làm méo biểu đồ dòng tiền (Monthly Flow)
-    if (t.name?.startsWith("Mua/Gửi: ") || t.name?.startsWith("Hoàn gốc tiết kiệm: ")) return;
-    
-    const cat = ((t as any).detail || t.category || "").toLowerCase();
-    if (cashWallets.includes(cat)) {
-      const key = `${t.name || "Unknown"}|${t.date || "Unknown"}`;
-      const existing = cashEvents.get(key) || { amount: 0, date: t.date, index };
-      existing.amount += (Number(t.amount) || 0);
-      cashEvents.set(key, existing);
-    }
-  });
+  const cashWallets = ["bank account", "tài khoản ngân hàng", "cash", "tiền mặt"];
 
   let totalIn = 0;
   let totalOut = 0;
+
+  validTransactions.forEach((t) => {
+    // Bỏ qua các giao dịch mua tài sản/gửi tiết kiệm hoặc hoàn gốc để không bị tính vào Chi phí / Thu nhập
+    if (t.name.startsWith("Mua/Gửi: ") || t.name.startsWith("Hoàn gốc tiết kiệm: ")) return;
+    
+    const cat = ((t as any).detail || t.category || "").toLowerCase();
+    if (cashWallets.includes(cat)) {
+      if (t.amount > 0) {
+        totalIn = roundAmount(totalIn + t.amount);
+      } else if (t.amount < 0) {
+        totalOut = roundAmount(totalOut + Math.abs(t.amount));
+      }
+    }
+  });
+
   const monthlyGroups = new Map<string, { inflow: number; outflow: number }>();
+  validTransactions.forEach((t, index) => {
+    // Bỏ qua các giao dịch tài sản để không làm méo biểu đồ dòng tiền (Monthly Flow)
+    if (t.name.startsWith("Mua/Gửi: ") || t.name.startsWith("Hoàn gốc tiết kiệm: ")) return;
 
-  cashEvents.forEach((event) => {
-    const amt = roundAmount(event.amount);
-    if (Number.isNaN(amt) || amt === 0) return; // Transfer or invalid
-
-    if (amt > 0) {
-      totalIn = roundAmount(totalIn + amt);
-    } else {
-      totalOut = roundAmount(totalOut + Math.abs(amt));
+    const cat = ((t as any).detail || t.category || "").toLowerCase();
+    if (cashWallets.includes(cat)) {
+      const label = monthLabel(t.date, index);
+      const bucket = monthlyGroups.get(label) ?? { inflow: 0, outflow: 0 };
+      if (t.amount > 0) {
+        bucket.inflow = roundAmount(bucket.inflow + t.amount);
+      } else if (t.amount < 0) {
+        bucket.outflow = roundAmount(bucket.outflow + Math.abs(t.amount));
+      }
+      monthlyGroups.set(label, bucket);
     }
-
-    const label = monthLabel(event.date || "", event.index);
-    const bucket = monthlyGroups.get(label) ?? { inflow: 0, outflow: 0 };
-    if (amt > 0) {
-      bucket.inflow = roundAmount(bucket.inflow + amt);
-    } else {
-      bucket.outflow = roundAmount(bucket.outflow + Math.abs(amt));
-    }
-    monthlyGroups.set(label, bucket);
   });
 
   const monthlyFlow = Array.from(monthlyGroups.entries()).slice(-6).map(([month, value]) => ({

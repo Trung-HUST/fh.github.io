@@ -36,8 +36,6 @@ jobs:
         run: npm install --no-audit --no-fund --legacy-peer-deps > install-log.txt 2>&1 || true
 
       - name: Build project
-        env:
-          VITE_GOOGLE_SHEET_DB_URL: https://gas-proxy.trunghere.workers.dev/
         run: npm run build > build-log.txt 2>&1 || true
 
       - name: Debug Output
