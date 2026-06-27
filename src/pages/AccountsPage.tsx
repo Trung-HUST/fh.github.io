@@ -16,7 +16,11 @@ export default function AccountsPage() {
         <div className="flex items-center justify-between">
           <div>
             <p className="font-mono text-2xl text-matrix-primary glow-text">
-              {formatCurrency(accountList.reduce((s, a) => s + a.balance, 0))}
+              {formatCurrency(accountList.reduce((s, a) => {
+                const nameLow = a.name.toLowerCase();
+                const isLiability = nameLow.includes("liabilities") || nameLow.includes("khoản phải trả") || nameLow.includes("credit card") || nameLow.includes("thẻ tín dụng");
+                return s + (isLiability ? -a.balance : a.balance);
+              }, 0))}
             </p>
             <p className="font-mono text-xs text-matrix-dim mt-1">
               {t("accounts.acrossAccounts", { count: accountList.length })}
