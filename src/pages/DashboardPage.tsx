@@ -14,7 +14,8 @@ import { MatrixCalendar } from "@/components/ui";
 import { useDashboardViewModel, useGreetingMessage } from "@/viewmodels/useDashboardViewModel";
 import { formatCurrency } from "@/models/amount";
 import { getCachedAvatar, getCachedContracts, getCachedTransactions } from "@/lib/sheet-db";
-import { cn } from "@/lib/utils";
+import { MatrixButton } from "@/components/ui/MatrixButton";
+import { cn, translateCategory } from "@/lib/utils";
 import { useTranslation } from "react-i18next";
 import { X, Plus, PiggyBank, Landmark, TrendingUp, Gem, Briefcase, Car, Shield } from "lucide-react";
 import { AssetDetailsModal } from "@/components/ui/AssetDetailsModal";
@@ -487,7 +488,7 @@ export default function DashboardPage() {
                 <div className="flex items-center gap-2 min-w-0">
                   <span className="text-matrix-dim">{item.date}</span>
                   <span className="text-matrix-muted truncate">
-                    {t(`categories.${item.desc.replace(/ & | /g, "")}`, t(`accounts.${item.desc.replace(/ & | /g, "")}`, item.desc))}
+                    {translateCategory(item.desc, t)}
                   </span>
                 </div>
                 <span

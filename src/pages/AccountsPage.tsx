@@ -2,7 +2,7 @@ import { AsciiBox } from "@/components/ui/AsciiBox";
 import { DataRow, Sparkline } from "@/components/ui/MatrixExtras";
 import { useAccountsViewModel } from "@/viewmodels/useAccountsViewModel";
 import { formatCurrency } from "@/models/amount";
-import { cn } from "@/lib/utils";
+import { cn, translateCategory } from "@/lib/utils";
 import { useTranslation } from "react-i18next";
 
 export default function AccountsPage() {
@@ -73,7 +73,7 @@ export default function AccountsPage() {
               className="flex items-center justify-between font-mono text-xs py-1 border-b border-matrix-primary/5 last:border-0"
             >
               <span className="text-matrix-muted">
-                {t(`categories.${item.desc.replace(/ & | /g, "")}`, t(`accounts.${item.desc.replace(/ & | /g, "")}`, item.desc))}
+                {translateCategory(item.desc, t)}
               </span>
               <div className="flex items-center gap-6">
                 <span className="text-matrix-dim text-[11px]">{item.date}</span>

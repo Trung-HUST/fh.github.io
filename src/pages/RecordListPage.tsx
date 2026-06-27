@@ -3,7 +3,7 @@ import { ConnectionStatus } from "@/components/ui/MatrixExtras";
 import { MatrixButton } from "@/components/ui/MatrixButton";
 import { MatrixDatePicker } from "@/components/ui/MatrixDatePicker";
 import { useRecordListViewModel } from "@/viewmodels/useRecordListViewModel";
-import { cn } from "@/lib/utils";
+import { cn, translateCategory } from "@/lib/utils";
 import { useTranslation } from "react-i18next";
 import { useState, useEffect, useMemo } from "react";
 import { useMatrixDialog } from "@/contexts/MatrixDialogContext";
@@ -575,7 +575,7 @@ export default function RecordListPage() {
                 {record.name}
               </span>
               <span className="col-span-2 text-matrix-dim truncate pr-2">
-                {t(`dashboard.categories.${record.category.replace(/ & | /g, "")}`, t(`dashboard.accounts.${record.category.replace(/ & | /g, "")}`, record.category))}
+                {translateCategory(record.category, t)}
               </span>
               <span className="col-span-2 text-matrix-dim text-[11px] pr-2">
                 {record.date}
