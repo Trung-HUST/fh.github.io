@@ -34,7 +34,20 @@ export default function FundDetailPage() {
   }
 
   // Filter transactions for this fund
-  const fundTransactions = records.filter(r => r.category === decodedId || r.detail === decodedId);
+  const fundTransactions = records.filter(r => {
+    const rawCat = ((r as any).detail || r.category || "").trim();
+    const cat = rawCat.toLowerCase();
+    const target = decodedId.toLowerCase();
+    
+    if (target === "liabilities" || target === "khoản phải trả") {
+      if (cat.startsWith("liabilities") || cat.startsWith("khoản phải trả")) return true;
+    }
+    if (target === "accounts receivable" || target === "accountsreceivable" || target === "khoản phải thu") {
+      if (cat.startsWith("accounts receivable") || cat.startsWith("accountsreceivable") || cat.startsWith("khoản phải thu")) return true;
+    }
+    
+    return cat === target || cat.startsWith(`${target}-`);
+  });
   const fundContracts = Array.isArray(contracts) ? contracts.filter(c => c?.goalName === decodedId && !c?.deleted) : [];
 
   return (
