@@ -308,7 +308,7 @@ export function AssetDetailsModal({ assetClass, assetType, contracts, transactio
                 <div className="space-y-3">
                   {accountTransactions.length === 0 ? (
                     <p className="text-matrix-dim text-sm text-center py-4 font-mono">
-                      Không có giao dịch nào.
+                      {t("dashboard.noTransactions", "Không có giao dịch nào.")}
                     </p>
                   ) : (
                     accountTransactions.map((t, idx) => (

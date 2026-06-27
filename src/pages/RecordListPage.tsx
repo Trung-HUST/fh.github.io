@@ -502,7 +502,7 @@ export default function RecordListPage() {
 
                     {formData.contractType === "VEHICLE" && (
                       <div>
-                        <label className="block text-matrix-dim mb-1 text-xs uppercase">Khấu hao (%/năm)</label>
+                        <label className="block text-matrix-dim mb-1 text-xs uppercase">{t("records.depreciationRateLabel", "Khấu hao (%/năm)")}</label>
                         <input type="number" step="0.01" value={formData.depreciationRate} onChange={e => setFormData({...formData, depreciationRate: e.target.value})} className="w-full bg-black border border-matrix-ghost/50 text-matrix-primary p-2 focus:border-matrix-primary focus:outline-none" />
                       </div>
                     )}
