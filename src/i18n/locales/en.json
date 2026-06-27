@@ -165,7 +165,9 @@
       "ACCOUNT": "Account",
       "BANKACCOUNT": "Bank Account",
       "ACCOUNTSRECEIVABLE": "Accounts Receivable",
-      "MAINACCOUNT": "Main Account"
+      "MAINACCOUNT": "Main Account",
+      "LIABILITIES": "Liabilities",
+      "CREDITCARDDEBT": "Credit Card Debt"
     },
     "assets": "Assets",
     "activeAssets": "Active Assets",

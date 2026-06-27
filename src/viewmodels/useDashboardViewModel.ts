@@ -353,7 +353,13 @@ export function useDashboardViewModel() {
     const totalFundsBalance = enrichedGoals.reduce((acc, goal) => acc + (goal.saved || 0), 0);
 
     const assetBreakdown = [
-      ...safeAccountList.filter(a => a?.name && a.name !== "CreditCardDebt" && a.name !== "Liabilities" && a.name !== "Funds" && a.name !== "FUNDS").map(a => ({ id: a.name, name: a.name, count: 1, value: a.balance || 0, type: 'ACCOUNT' })),
+      ...safeAccountList.filter(a => a?.name && a.name !== "Funds" && a.name !== "FUNDS").map(a => ({ 
+        id: a.name === "CreditCardDebt" ? "Liabilities" : a.name, 
+        name: a.name === "CreditCardDebt" ? "Liabilities" : a.name, 
+        count: 1, 
+        value: (a.name === 'Liabilities' || a.name === 'CreditCardDebt' ? -(a.balance || 0) : (a.balance || 0)), 
+        type: 'ACCOUNT' 
+      })),
       { id: 'SAVINGS', name: 'Savings', count: safeContracts.filter(c => c?.type === 'SAVINGS' && c?.status === 'ACTIVE' && !c?.deleted).length, value: safeContracts.filter(c => c?.type === 'SAVINGS' && c?.status === 'ACTIVE' && !c?.deleted).reduce((acc, c) => acc + (c?.currentValue || c?.amount || 0), 0), type: 'CONTRACT_GROUP' },
       { id: 'REAL_ESTATE', name: 'RealEstate', count: safeContracts.filter(c => c?.type === 'REAL_ESTATE' && c?.status === 'ACTIVE' && !c?.deleted).length, value: safeContracts.filter(c => c?.type === 'REAL_ESTATE' && c?.status === 'ACTIVE' && !c?.deleted).reduce((acc, c) => acc + (c?.currentValue || c?.amount || 0), 0), type: 'CONTRACT_GROUP' },
       { id: 'GOLD', name: 'Gold', count: safeContracts.filter(c => c?.type === 'GOLD' && c?.status === 'ACTIVE' && !c?.deleted).length, value: safeContracts.filter(c => c?.type === 'GOLD' && c?.status === 'ACTIVE' && !c?.deleted).reduce((acc, c) => acc + (c?.currentValue || c?.amount || 0), 0), type: 'CONTRACT_GROUP' },
@@ -362,12 +368,11 @@ export function useDashboardViewModel() {
       { id: 'BOND', name: 'Bond', count: safeContracts.filter(c => c?.type === 'BOND' && c?.status === 'ACTIVE' && !c?.deleted).length, value: safeContracts.filter(c => c?.type === 'BOND' && c?.status === 'ACTIVE' && !c?.deleted).reduce((acc, c) => acc + (c?.currentValue || c?.amount || 0), 0), type: 'CONTRACT_GROUP' },
       { id: 'CRYPTO', name: 'Crypto', count: safeContracts.filter(c => c?.type === 'CRYPTO' && c?.status === 'ACTIVE' && !c?.deleted).length, value: safeContracts.filter(c => c?.type === 'CRYPTO' && c?.status === 'ACTIVE' && !c?.deleted).reduce((acc, c) => acc + (c?.currentValue || c?.amount || 0), 0), type: 'CONTRACT_GROUP' },
       { id: 'OTHER_ASSET', name: 'OtherAsset', count: safeContracts.filter(c => c?.type === 'OTHER_ASSET' && c?.status === 'ACTIVE' && !c?.deleted).length, value: safeContracts.filter(c => c?.type === 'OTHER_ASSET' && c?.status === 'ACTIVE' && !c?.deleted).reduce((acc, c) => acc + (c?.currentValue || c?.amount || 0), 0), type: 'CONTRACT_GROUP' },
-    ].filter(a => a.value > 0 || (a.type === 'CONTRACT_GROUP' && a.count > 0) || a.id === 'Funds');
+    ].filter(a => a.value !== 0 || (a.type === 'CONTRACT_GROUP' && a.count > 0) || a.id === 'Funds');
 
-    const totalDebt = safeAccountList.filter(a => a?.name === "CreditCardDebt" || a?.name === "Liabilities").reduce((acc, a) => acc + (a?.balance || 0), 0);
     const totalAssets = assetBreakdown
       .filter(item => item.id !== 'Funds' && item.id !== 'FUNDS')
-      .reduce((acc, item) => acc + (item.value || 0), 0) - totalDebt;
+      .reduce((acc, item) => acc + (item.value || 0), 0);
 
   return {
     accountList,

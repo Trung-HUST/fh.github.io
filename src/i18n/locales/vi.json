@@ -166,7 +166,9 @@
       "ACCOUNT": "Tài khoản / Ví",
       "BANKACCOUNT": "Tài khoản ngân hàng",
       "ACCOUNTSRECEIVABLE": "Khoản phải thu",
-      "MAINACCOUNT": "Tài khoản chính"
+      "MAINACCOUNT": "Tài khoản chính",
+      "LIABILITIES": "Khoản phải trả",
+      "CREDITCARDDEBT": "Dư nợ thẻ tín dụng"
     },
     "assets": "Tài sản",
     "activeAssets": "Tài sản đang giữ",

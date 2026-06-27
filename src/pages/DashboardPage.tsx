@@ -298,7 +298,7 @@ export default function DashboardPage() {
                   <span className="font-mono text-xs text-matrix-dim border border-matrix-dim/30 px-1">{asset.count}</span>
                 </div>
                 <div className="font-mono text-xs text-matrix-dim uppercase truncate" title={t(`dashboard.assetTypes.${asset.id.replace(/\s+/g, '').toUpperCase()}`, asset.name)}>{t(`dashboard.assetTypes.${asset.id.replace(/\s+/g, '').toUpperCase()}`, asset.name)}</div>
-                <div className="font-mono text-sm text-matrix-primary mt-1">{formatCurrency(asset.value)}</div>
+                <div className={cn("font-mono text-sm mt-1", asset.value < 0 ? "text-red-500" : "text-matrix-primary")}>{formatCurrency(asset.value)}</div>
               </div>
             ))}
           </div>
