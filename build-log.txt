@@ -7,7 +7,7 @@
 rendering chunks...
 computing gzip size...
 dist/registerSW.js                0.16 kB
-dist/manifest.webmanifest         0.39 kB
+dist/manifest.webmanifest         0.46 kB
 dist/index.html                   1.17 kB │ gzip:   0.56 kB
 dist/assets/bg-CoJEZelR.jpg     926.25 kB
 dist/assets/index-B4rZUUxJ.css  102.46 kB │ gzip:  15.67 kB
@@ -22,11 +22,11 @@ dist/assets/index-B6WaIOeI.js   784.23 kB │ gzip: 215.41 kB
 - Adjust chunk size limit for this warning via build.chunkSizeWarningLimit.[39m
 [33m[33m[INEFFECTIVE_DYNAMIC_IMPORT] [0msrc/data/mock.ts is dynamically imported by src/lib/sheet-db.ts, src/pages/SettingsPage.tsx but also statically imported by src/viewmodels/useAccountsViewModel.ts, src/viewmodels/useComponentShowcaseViewModel.ts, src/viewmodels/useDashboardViewModel.ts, src/viewmodels/useFlowComparisonViewModel.ts, src/viewmodels/useHelpViewModel.ts, ..., dynamic import will not move module into another chunk.
 [39m
-[32m✓ built in 632ms[39m
+[32m✓ built in 538ms[39m
 
 [36mPWA v1.3.0[39m
 mode      [35mgenerateSW[39m
-precache  [32m9 entries[39m [2m(867.22 KiB)[22m
+precache  [32m7 entries[39m [2m(867.22 KiB)[22m
 files generated
   [2mdist/sw.js[22m
   [2mdist/workbox-9c191d2f.js[22m
