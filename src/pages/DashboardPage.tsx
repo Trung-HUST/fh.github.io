@@ -13,7 +13,7 @@ import { WeatherWidget } from "@/components/ui/WeatherWidget";
 import { MatrixCalendar } from "@/components/ui";
 import { useDashboardViewModel, useGreetingMessage } from "@/viewmodels/useDashboardViewModel";
 import { formatCurrency } from "@/models/amount";
-import { getCachedAvatar, getCachedContracts, getCachedTransactions } from "@/lib/sheet-db";
+import { getCachedAvatar, getCachedContracts, getCachedTransactions, getCachedAuthUser } from "@/lib/sheet-db";
 import { MatrixButton } from "@/components/ui/MatrixButton";
 import { cn, translateCategory } from "@/lib/utils";
 import { useTranslation } from "react-i18next";
@@ -74,6 +74,7 @@ export default function DashboardPage() {
   const greeting = useGreetingMessage();
   const avatarConfig = getCachedAvatar();
   const contracts = getCachedContracts();
+  const authUser = getCachedAuthUser();
 
   const navigate = useNavigate();
 
