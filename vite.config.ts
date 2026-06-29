@@ -3,6 +3,8 @@ import react from "@vitejs/plugin-react-swc";
 import tailwindcss from "@tailwindcss/vite";
 import path from "path";
 import { readFileSync } from "fs";
+import { VitePWA } from "vite-plugin-pwa";
+
 
 const pkg = JSON.parse(readFileSync(path.resolve(__dirname, "package.json"), "utf-8"));
 
@@ -34,7 +36,35 @@ export default defineConfig(() => ({
       overlay: false,
     },
   },
-  plugins: [tailwindcss(), react(), liveEndpointPlugin()],
+  plugins: [
+    tailwindcss(),
+    react(),
+    liveEndpointPlugin(),
+    VitePWA({
+      registerType: "autoUpdate",
+      includeAssets: ["favicon.svg", "apple-touch-icon-180x180.png"],
+      manifest: {
+        name: "Dark Fund",
+        short_name: "Dark Fund",
+        description: "A Financial Health dashboard with cyberpunk aesthetics.",
+        theme_color: "#0D1117",
+        background_color: "#0D1117",
+        display: "standalone",
+        icons: [
+          {
+            src: "pwa-192x192.png",
+            sizes: "192x192",
+            type: "image/png",
+          },
+          {
+            src: "pwa-512x512.png",
+            sizes: "512x512",
+            type: "image/png",
+          },
+        ],
+      },
+    }),
+  ],
   resolve: {
     alias: {
       "@": path.resolve(__dirname, "./src"),
