@@ -22,7 +22,7 @@ dist/assets/index-B6WaIOeI.js   784.23 kB │ gzip: 215.41 kB
 - Adjust chunk size limit for this warning via build.chunkSizeWarningLimit.[39m
 [33m[33m[INEFFECTIVE_DYNAMIC_IMPORT] [0msrc/data/mock.ts is dynamically imported by src/lib/sheet-db.ts, src/pages/SettingsPage.tsx but also statically imported by src/viewmodels/useAccountsViewModel.ts, src/viewmodels/useComponentShowcaseViewModel.ts, src/viewmodels/useDashboardViewModel.ts, src/viewmodels/useFlowComparisonViewModel.ts, src/viewmodels/useHelpViewModel.ts, ..., dynamic import will not move module into another chunk.
 [39m
-[32m✓ built in 538ms[39m
+[32m✓ built in 592ms[39m
 
 [36mPWA v1.3.0[39m
 mode      [35mgenerateSW[39m
