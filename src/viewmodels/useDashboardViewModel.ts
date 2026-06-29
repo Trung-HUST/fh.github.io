@@ -146,8 +146,19 @@ function useSystemSignals(): SignalRow[] {
     // Fetch every 10 minutes (600,000 ms)
     const intervalId = setInterval(fetchAll, 600000);
 
+    const loadDataFromCache = () => {
+      const tx = getCachedTransactions();
+      if (tx) {
+        // Mock state update logic if state was available in this hook
+      }
+    };
+
+    // Listen for background sync updates
+    window.addEventListener("matrix-sheet-sync", loadDataFromCache);
+
     return () => {
       isMounted = false;
+      window.removeEventListener("matrix-sheet-sync", loadDataFromCache);
       clearInterval(intervalId);
     };
   }, []);
@@ -156,8 +167,17 @@ function useSystemSignals(): SignalRow[] {
 }
 
 export function useDashboardViewModel() {
-  const snapshot = getCachedDashboardSnapshot();
-  const allTransactions = getCachedTransactions() || [];
+  const [snapshot, setSnapshot] = useState<SheetDashboardSnapshot | null>(() => getCachedDashboardSnapshot());
+  const [allTransactions, setAllTransactions] = useState<Transaction[]>(() => getCachedTransactions() || []);
+
+  useEffect(() => {
+    const handleSync = () => {
+      setSnapshot(getCachedDashboardSnapshot());
+      setAllTransactions(getCachedTransactions() || []);
+    };
+    window.addEventListener("matrix-sheet-sync", handleSync);
+    return () => window.removeEventListener("matrix-sheet-sync", handleSync);
+  }, []);
 
   const streakDays = useMemo(() => {
     if (!allTransactions.length) return 0;

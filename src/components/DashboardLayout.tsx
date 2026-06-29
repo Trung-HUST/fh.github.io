@@ -280,6 +280,7 @@ function SearchDialog({
 
 export function DashboardLayout() {
   useAutoSync();
+  const [syncCount, setSyncCount] = useState(0);
   const [mobileOpen, setMobileOpen] = useState(false);
   const [searchOpen, setSearchOpen] = useState(false);
   const [showLogoutConfirm, setShowLogoutConfirm] = useState(false);
@@ -291,6 +292,13 @@ export function DashboardLayout() {
   const authUser = getCachedAuthUser();
 
   const titleKey = PAGE_TITLE_KEYS[location.pathname] ?? "nav.dashboard";
+
+  // Listen for sync events
+  useEffect(() => {
+    const handleSync = () => setSyncCount(c => c + 1);
+    window.addEventListener("matrix-sheet-sync", handleSync);
+    return () => window.removeEventListener("matrix-sheet-sync", handleSync);
+  }, []);
 
   // Close mobile sidebar on route change
   useEffect(() => {
@@ -557,7 +565,7 @@ export function DashboardLayout() {
         </header>
 
         <div className="flex-1 p-2 md:p-3 overflow-y-auto matrix-scrollbar pb-24 md:pb-3">
-          <Outlet />
+          <Outlet key={syncCount} />
         </div>
       </main>
 
