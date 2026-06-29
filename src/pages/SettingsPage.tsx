@@ -15,6 +15,7 @@ export default function SettingsPage() {
   const [currency, setCurrency] = useState("VND");
   const [exchangeRate, setExchangeRate] = useState("26304.5");
   const [language, setLanguage] = useState(i18n.language?.substring(0, 2) || "en");
+  const [syncInterval, setSyncInterval] = useState("2");
   const [isSaving, setIsSaving] = useState(false);
   const [goals, setGoals] = useState<Goal[]>([]);
   const [budgets, setBudgets] = useState<Budget[]>([]);
@@ -32,6 +33,7 @@ export default function SettingsPage() {
       if (settings.currency) setCurrency(settings.currency);
       if (settings.exchangeRate) setExchangeRate(settings.exchangeRate);
       if (settings.language) setLanguage(settings.language);
+      if (settings.sync_interval !== undefined) setSyncInterval(settings.sync_interval);
     }
     setGoals(getCachedGoals());
     setBudgets(getCachedBudgets());
@@ -46,6 +48,7 @@ export default function SettingsPage() {
       currency, 
       exchangeRate,
       language,
+      sync_interval: syncInterval,
       custom_goals: JSON.stringify(goals),
       custom_budgets: JSON.stringify(budgets),
       custom_cards: JSON.stringify(cards),
@@ -105,6 +108,26 @@ export default function SettingsPage() {
             >
               <option value="VND">VND (₫)</option>
               <option value="USD">USD ($)</option>
+            </select>
+          </div>
+
+          <div className="border-t border-matrix-primary/10" />
+          <div className="flex items-center justify-between">
+            <div>
+              <p className="font-mono text-sm text-matrix-primary">{t("pages.settings.syncInterval", "Auto-Sync Interval")}</p>
+              <p className="font-mono text-xs text-matrix-dim">{t("pages.settings.syncIntervalDesc", "Background data fetch frequency")}</p>
+            </div>
+            <select
+              value={syncInterval}
+              onChange={(e) => setSyncInterval(e.target.value)}
+              className="bg-matrix-bg border border-matrix-primary/20 text-matrix-primary font-mono text-xs px-2 py-1 outline-none focus:border-matrix-primary"
+            >
+              <option value="0">{t("pages.settings.syncOff", "Off")}</option>
+              <option value="1">{t("pages.settings.syncMins", { count: 1 })}</option>
+              <option value="2">{t("pages.settings.syncMins", { count: 2 })}</option>
+              <option value="5">{t("pages.settings.syncMins", { count: 5 })}</option>
+              <option value="10">{t("pages.settings.syncMins", { count: 10 })}</option>
+              <option value="30">{t("pages.settings.syncMins", { count: 30 })}</option>
             </select>
           </div>
           

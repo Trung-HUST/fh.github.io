@@ -19,6 +19,7 @@ import { BootScreen } from "@/components/ui/MatrixExtras";
 import { MatrixButton } from "@/components/ui/MatrixButton";
 import { MobileNavbar } from "@/components/ui/MobileNavbar";
 import sidebarBg from "@/assets/bg.jpg";
+import { useAutoSync } from "@/hooks/useAutoSync";
 
 // -- Navigation data model --
 
@@ -278,6 +279,7 @@ function SearchDialog({
 // -- Main layout --
 
 export function DashboardLayout() {
+  useAutoSync();
   const [mobileOpen, setMobileOpen] = useState(false);
   const [searchOpen, setSearchOpen] = useState(false);
   const [showLogoutConfirm, setShowLogoutConfirm] = useState(false);
