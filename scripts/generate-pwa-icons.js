@@ -2,7 +2,7 @@ import sharp from 'sharp';
 import fs from 'fs';
 import path from 'path';
 
-const sourceFile = path.resolve('src/data/logo.png');
+const sourceFile = path.resolve('src/data/logo-DF.png');
 const outputDir = path.resolve('public');
 
 if (!fs.existsSync(sourceFile)) {
