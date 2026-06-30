@@ -565,7 +565,7 @@ export function DashboardLayout() {
         </header>
 
         <div className="flex-1 p-2 md:p-3 overflow-y-auto matrix-scrollbar pb-24 md:pb-3">
-          <Outlet key={syncCount} />
+          <Outlet />
         </div>
       </main>
 

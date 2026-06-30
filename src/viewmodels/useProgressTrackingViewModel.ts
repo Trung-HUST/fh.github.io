@@ -6,6 +6,7 @@ import { computeProgressSummary, computeProgressPercent } from "@/models/progres
 import { CHART_COLORS } from "@/lib/palette";
 import { getCachedDashboardSnapshot } from "@/lib/googleSheetDb";
 import { budgets as mockBudgets, monthlyBudgetData } from "@/data/mock";
+import { useSyncTrigger } from "@/hooks/useSyncTrigger";
 
 export interface CategoryProgress {
   category: string;
@@ -17,8 +18,9 @@ export interface CategoryProgress {
 }
 
 export function useProgressTrackingViewModel() {
+  const syncTick = useSyncTrigger();
   const snapshot = getCachedDashboardSnapshot();
-  const activeBudgets = snapshot?.budgets && snapshot.budgets.length > 0 ? snapshot.budgets : mockBudgets;
+  const activeBudgets = useMemo(() => snapshot?.budgets && snapshot.budgets.length > 0 ? snapshot.budgets : mockBudgets, [snapshot, syncTick]);
   
   const summary = useMemo(() => computeProgressSummary(activeBudgets), [activeBudgets]);
 
@@ -43,7 +45,7 @@ export function useProgressTrackingViewModel() {
       }));
     }
     return monthlyBudgetData;
-  }, [snapshot]);
+  }, [snapshot, syncTick]);
 
   return { summary, categories, comparisonData };
 }

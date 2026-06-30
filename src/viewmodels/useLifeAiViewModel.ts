@@ -13,13 +13,15 @@ import {
   lifeAiHeartRateSlots,
 } from "@/data/mock";
 import { countActiveEvents, computeTotalCalories, shiftDate } from "@/models/life-ai";
+import { useSyncTrigger } from "@/hooks/useSyncTrigger";
 import { getCachedBiometrics, getCachedTimeline, syncTimeline, getCachedHeatmapData, syncHeatmapData, getCachedActivities, syncActivities, getCachedUsage24h, syncUsage24h } from "@/lib/googleSheetDb";
 import type { HeatmapCell } from "@/models/types";
 
 export function useLifeAiViewModel() {
+  const syncTick = useSyncTrigger();
   const [selectedDate, setSelectedDate] = useState(() => new Date()); // Default to today
 
-  const biometrics = useMemo(() => getCachedBiometrics(), []);
+  const biometrics = useMemo(() => getCachedBiometrics(), [syncTick]);
   
   const currentBiometric = useMemo(() => {
     // Standardize to local date string YYYY-MM-DD safely

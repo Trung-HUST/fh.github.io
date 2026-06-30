@@ -7,6 +7,7 @@ import { getCachedTransactions } from "@/lib/googleSheetDb";
 import { classifyDirection, formatSignedAmount, classifyStatus } from "@/models/record-list";
 import { syncCreateTransactions } from "@/lib/googleSheetDb";
 import { useState, useCallback } from "react";
+import { useSyncTrigger } from "@/hooks/useSyncTrigger";
 import type { AmountDirection, StatusVariant } from "@/models/record-list";
 import { convertToVnd } from "@/models/amount";
 
@@ -23,9 +24,10 @@ export interface RecordRow {
 }
 
 export function useRecordListViewModel() {
+  const syncTick = useSyncTrigger();
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [updateCounter, setUpdateCounter] = useState(0);
-  const sheetTransactions = useMemo(() => getCachedTransactions(), [updateCounter]);
+  const sheetTransactions = useMemo(() => getCachedTransactions(), [updateCounter, syncTick]);
 
   const addTransaction = useCallback(async (
     name: string,
